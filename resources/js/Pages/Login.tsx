@@ -1,7 +1,5 @@
 import {
   Button,
-  Card,
-  CardBody,
   Center,
   Flex,
   FormControl,
@@ -16,7 +14,6 @@ import {
   VStack,
   VisuallyHidden,
   chakra,
-  CardFooter,
   useToast,
   InputRightElement,
   IconButton,
@@ -101,150 +98,157 @@ function Login({ flash }: Props) {
   }
 
   return (
-    <Flex w='full' minH='100vh' justify='center'>
-      <Flex p='12' borderRadius='sm' minH='full' flexGrow='1'>
-        <Card
-          mx='auto'
-          w='fit-content'
-          boxShadow={{ base: 'base', md: 'none' }}
-          px='4'
-          py='3'
-          flexDirection='row'
-          justifyContent='stretch'
-          borderTopRightRadius={{ base: 'sm', md: 0 }}
-          borderBottomRightRadius={{ base: 'sm', md: 0 }}
+    <Flex bg='white' w='full' minH='100vh' position='relative' justify='center'>
+      <Flex
+        right={0}
+        bg={{
+          base: 'white',
+          md: 'linear-gradient(34.83deg, #0085FF 28.78%, #70C8DC 98.47%, #70C8DC 98.47%)',
+        }}
+        h='full'
+        w={{ base: 'full', md: '50%' }}
+        position='absolute'
+      />
+      <Flex borderRadius='sm' minH='full' flexGrow='1'>
+        <Flex
+          zIndex={1}
+          bg='#D9D7D74F'
+          my='8'
+          ml='8'
+          mr={{ base: '8', md: '0' }}
+          borderTopLeftRadius='50px'
+          borderBottomLeftRadius='50px'
+          borderTopRightRadius={{ base: '50px', md: '0' }}
+          borderBottomRightRadius={{ base: '50px', md: '0' }}
+          flex='1'
+          justifyContent='center'
+          gap='8'
         >
           <chakra.form
+            p='4'
+            my='auto'
             display='flex'
             flexDirection='column'
             noValidate
             onSubmit={handleSubmit(login, console.error) as any}
           >
-            <CardBody>
-              <Center
-                display={{ base: 'flex', md: 'none' }}
-                mx='auto'
-                h='fit-content'
-                mb='5'
-                border='4px solid'
-                borderRadius='full'
-                w='fit-content'
-                color='orange.500'
-                p='4'
-              >
-                <PawPrint size='78px' />
-              </Center>
-              <VStack spacing='3'>
-                <VStack align='start'>
-                  <Heading>Bem vindo de volta!</Heading>
-                  <Text fontSize='sm'>
-                    Preencha seus dados para acessar sua conta
-                  </Text>
-                </VStack>
-
-                <FormControl
-                  isRequired
-                  isInvalid={errors.email?.message !== undefined}
-                >
-                  <VisuallyHidden>
-                    <FormLabel>Email</FormLabel>
-                  </VisuallyHidden>
-                  <InputGroup>
-                    <InputLeftElement color='gray.500'>
-                      <MailIcon size='16px' />
-                    </InputLeftElement>
-                    <Input
-                      placeholder='Email'
-                      type='email'
-                      {...register('email')}
-                    />
-                  </InputGroup>
-                  <FormErrorMessage fontSize='xs'>
-                    {errors.email?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={errors.password?.message !== undefined}
-                >
-                  <VisuallyHidden>
-                    <FormLabel>Senha</FormLabel>
-                  </VisuallyHidden>
-                  <InputGroup>
-                    <InputLeftElement color='gray.500'>
-                      <LockIcon size='16px' />
-                    </InputLeftElement>
-                    <Input
-                      placeholder='Senha'
-                      type={showPassword ? 'text' : 'password'}
-                      {...register('password')}
-                    />
-                    <InputRightElement color='gray.500'>
-                      <IconButton
-                        colorScheme='gray'
-                        variant='link'
-                        aria-label={
-                          showPassword ? 'Esconder senha' : 'Mostrar senha'
-                        }
-                        onClick={() => {
-                          setShowPassword(!showPassword)
-                        }}
-                        icon={
-                          showPassword ? (
-                            <EyeOffIcon size='16px' />
-                          ) : (
-                            <EyeIcon size='16px' />
-                          )
-                        }
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  <FormErrorMessage fontSize='xs'>
-                    {errors.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
+            <Center
+              display={{ base: 'flex', md: 'none' }}
+              mx='auto'
+              h='fit-content'
+              mb='5'
+              border='4px solid'
+              borderRadius='full'
+              w='fit-content'
+              color='blue.500'
+              p='4'
+            >
+              <PawPrint size='85px' fill='currentColor' />
+            </Center>
+            <VStack spacing='3'>
+              <VStack align='start'>
+                <Heading>Bem vindo de volta!</Heading>
+                <Text fontSize='sm'>
+                  Preencha seus dados para acessar sua conta
+                </Text>
               </VStack>
-            </CardBody>
-            <CardFooter>
-              <HStack w='full' justify='space-between'>
-                <Link href={'/register'}>
-                  <Text fontSize='sm'>Não tenho conta</Text>
-                </Link>
-                <Button isLoading={isLoading} flexShrink={0} type='submit'>
-                  Entrar
-                </Button>
-              </HStack>
-            </CardFooter>
+
+              <FormControl
+                isRequired
+                isInvalid={errors.email?.message !== undefined}
+              >
+                <VisuallyHidden>
+                  <FormLabel>Email</FormLabel>
+                </VisuallyHidden>
+                <InputGroup>
+                  <InputLeftElement color='gray.500'>
+                    <MailIcon size='16px' />
+                  </InputLeftElement>
+                  <Input
+                    placeholder='Email'
+                    type='email'
+                    {...register('email')}
+                  />
+                </InputGroup>
+                <FormErrorMessage fontSize='xs'>
+                  {errors.email?.message}
+                </FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={errors.password?.message !== undefined}
+              >
+                <VisuallyHidden>
+                  <FormLabel>Senha</FormLabel>
+                </VisuallyHidden>
+                <InputGroup>
+                  <InputLeftElement color='gray.500'>
+                    <LockIcon size='16px' />
+                  </InputLeftElement>
+                  <Input
+                    placeholder='Senha'
+                    type={showPassword ? 'text' : 'password'}
+                    {...register('password')}
+                  />
+                  <InputRightElement color='gray.500'>
+                    <IconButton
+                      colorScheme='gray'
+                      variant='link'
+                      aria-label={
+                        showPassword ? 'Esconder senha' : 'Mostrar senha'
+                      }
+                      onClick={() => {
+                        setShowPassword(!showPassword)
+                      }}
+                      icon={
+                        showPassword ? (
+                          <EyeOffIcon size='16px' />
+                        ) : (
+                          <EyeIcon size='16px' />
+                        )
+                      }
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage fontSize='xs'>
+                  {errors.password?.message}
+                </FormErrorMessage>
+              </FormControl>
+            </VStack>
+            <HStack mt='6' w='full' justify='space-between'>
+              <Link href={'/register'}>
+                <Text fontSize='sm'>Não tenho conta</Text>
+              </Link>
+              <Button isLoading={isLoading} flexShrink={0} type='submit'>
+                Entrar
+              </Button>
+            </HStack>
           </chakra.form>
-        </Card>
+        </Flex>
         <Flex
           display={{ base: 'none', md: 'flex' }}
-          px={4}
-          minW='50%'
+          zIndex={1}
+          bg='#32343C21'
+          my='8'
+          mr='8'
+          borderTopRightRadius='50px'
+          borderBottomRightRadius='50px'
           flex='1'
-          bg='blue.500'
-          align='center'
-          justify='center'
-          direction='column'
-          color='white'
-          borderTopRightRadius='sm'
-          borderBottomRightRadius='sm'
+          alignItems='center'
         >
-          <Center
-            h='fit-content'
-            mb='5'
-            border='4px solid'
-            borderRadius='full'
-            color='white'
-            p='4'
-          >
-            <PawPrint size='78px' />
-          </Center>
-          <VStack spacing={1} textAlign='center'>
-            <Heading>Seja bem-vindo!</Heading>
-            <Text fontSize='sm'>
-              Entre e tenha acesso a mais de 100 petshops pelo Brasil.
-            </Text>
+          <VStack m='10' spacing='6'>
+            <Heading color='white' size='md' textAlign='center'>
+              Sem mais estressse para administrar seus serviços no pet shop.
+            </Heading>
+            <Center border='1px solid white' borderRadius='full' p='4'>
+              <PawPrint
+                width='200px'
+                height='200px'
+                fill='white'
+                stroke='white'
+              />
+            </Center>
+            <Text color='white'>Um sistema de pet shop feito para você.</Text>
           </VStack>
         </Flex>
       </Flex>

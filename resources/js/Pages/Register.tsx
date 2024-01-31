@@ -1,9 +1,6 @@
 import {
   Button,
-  Card,
-  CardBody,
   Center,
-  Container,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -106,257 +103,265 @@ function Register() {
   }
 
   return (
-    <Flex w="full" minH="100vh" align="center" justify="center">
-      <Container w="full">
-        <Flex boxShadow={{ base: 'none', md: 'base' }} borderRadius="sm">
-          <Card
-            mx="auto"
-            w="fit-content"
-            boxShadow={{ base: 'base', md: 'none' }}
-            px="4"
-            py="3"
-            flexDirection="row"
-            alignContent="stretch"
-            justifyItems="stretch"
-            borderTopRightRadius={{ base: 'sm', md: 0 }}
-            borderBottomRightRadius={{ base: 'sm', md: 0 }}
+    <Flex bg='white' w='full' minH='100vh' position='relative' justify='center'>
+      <Flex
+        right={0}
+        bg={{
+          base: 'white',
+          md: 'linear-gradient(34.83deg, #0085FF 28.78%, #70C8DC 98.47%, #70C8DC 98.47%)',
+        }}
+        h='full'
+        w={{ base: 'full', md: '50%' }}
+        position='absolute'
+      />
+      <Flex
+        flex='1'
+        zIndex={1}
+        bg='#D9D7D74F'
+        my='8'
+        ml='8'
+        mr={{ base: '8', md: '0' }}
+        borderTopLeftRadius='50px'
+        borderBottomLeftRadius='50px'
+        borderTopRightRadius={{ base: '50px', md: '0' }}
+        borderBottomRightRadius={{ base: '50px', md: '0' }}
+        justifyContent='center'
+        gap='8'
+      >
+        <chakra.form
+          p='4'
+          my='auto'
+          noValidate
+          onSubmit={handleSubmit(registerUser, console.error) as any}
+        >
+          <Center
+            display={{ base: 'flex', md: 'none' }}
+            mx='auto'
+            h='fit-content'
+            mb='5'
+            border='4px solid'
+            borderRadius='full'
+            w='fit-content'
+            color='blue.500'
+            p='4'
           >
-            <chakra.form
-              noValidate
-              onSubmit={handleSubmit(registerUser, console.error) as any}
-            >
-              <CardBody>
-                <Center
-                  display={{ base: 'flex', sm: 'none' }}
-                  mx="auto"
-                  h="fit-content"
-                  mb="5"
-                  border="4px solid"
-                  borderRadius="full"
-                  w="fit-content"
-                  color="orange.500"
-                  p="4"
-                >
-                  <PawPrint size="78px" />
-                </Center>
-                <VStack spacing="3">
-                  <VStack align="start">
-                    <Heading>Vamos começar?</Heading>
-                    <Text fontSize="sm">
-                      Insira seus dados abaixo para criar uma conta
-                    </Text>
-                  </VStack>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.name?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Nome</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <UserIcon size="16px" />
-                      </InputLeftElement>
-                      <Input placeholder="Nome" {...register('name')} />
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.name?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.cpf?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>CPF</FormLabel>
-                    </VisuallyHidden>
-
-                    <Controller
-                      control={control}
-                      name="cpf"
-                      render={({ field: { ref, value, onChange, onBlur } }) => (
-                        <InputGroup>
-                          <InputLeftElement color="gray.500">
-                            <FingerprintIcon size="16px" />
-                          </InputLeftElement>
-                          <Input
-                            placeholder="CPF"
-                            ref={ref}
-                            value={formatCpfPartials(value)}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                          />
-                        </InputGroup>
-                      )}
-                    />
-                    <FormErrorMessage fontSize="xs">
-                      {errors.cpf?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.birthdate?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Data de nascimento</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <CalendarIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Data de nascimento"
-                        type="date"
-                        {...register('birthdate')}
-                      />
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.birthdate?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.email?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Email</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <MailIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Email"
-                        type="email"
-                        {...register('email')}
-                      />
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.email?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.password?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Senha</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <LockIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Senha"
-                        type={showPassword ? 'text' : 'password'}
-                        {...register('password')}
-                      />
-                      <InputRightElement color="gray.500">
-                        <IconButton
-                          colorScheme="gray"
-                          variant="link"
-                          aria-label={
-                            showPassword ? 'Esconder senha' : 'Mostrar senha'
-                          }
-                          onClick={() => {
-                            setShowPassword(!showPassword)
-                          }}
-                          icon={
-                            showPassword ? (
-                              <EyeOffIcon size="16px" />
-                            ) : (
-                              <EyeIcon size="16px" />
-                            )
-                          }
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.password?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={
-                      errors.passwordConfirmation?.message !== undefined
-                    }
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Confirmação de senha</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <LockIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Confirme sua senha"
-                        type={showPassword ? 'text' : 'password'}
-                        {...register('passwordConfirmation')}
-                      />
-                      <InputRightElement color="gray.500">
-                        <IconButton
-                          colorScheme="gray"
-                          variant="link"
-                          aria-label={
-                            showPassword ? 'Esconder senha' : 'Mostrar senha'
-                          }
-                          onClick={() => {
-                            setShowPassword(!showPassword)
-                          }}
-                          icon={
-                            showPassword ? (
-                              <EyeOffIcon size="16px" />
-                            ) : (
-                              <EyeIcon size="16px" />
-                            )
-                          }
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.passwordConfirmation?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <HStack w="full" justify="space-between">
-                    <Link href={'/login'}>
-                      <Text fontSize="sm">Já tenho cadastro</Text>
-                    </Link>
-                    <Button flexShrink={0} type="submit">
-                      Cadastrar
-                    </Button>
-                  </HStack>
-                </VStack>
-              </CardBody>
-            </chakra.form>
-          </Card>
-          <Flex
-            display={{ base: 'none', md: 'flex' }}
-            flex="1"
-            bg="orange.500"
-            align="center"
-            justify="center"
-            direction="column"
-            color="white"
-            borderTopRightRadius="sm"
-            borderBottomRightRadius="sm"
-          >
-            <Center
-              h="fit-content"
-              mb="5"
-              border="4px solid"
-              borderRadius="full"
-              color="white"
-              p="4"
-            >
-              <PawPrint size="78px" />
-            </Center>
-            <VStack spacing={1}>
-              <Heading>Faça seu cadastro</Heading>
-              <Text fontSize="sm">E faça seu pet mais feliz.</Text>
+            <PawPrint size='78px' fill='currentColor' />
+          </Center>
+          <VStack spacing='3'>
+            <VStack align='start'>
+              <Heading>Vamos começar?</Heading>
+              <Text fontSize='sm'>
+                Insira seus dados abaixo para criar uma conta
+              </Text>
             </VStack>
-          </Flex>
-        </Flex>
-      </Container>
+            <FormControl
+              isRequired
+              isInvalid={errors.name?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>Nome</FormLabel>
+              </VisuallyHidden>
+              <InputGroup>
+                <InputLeftElement color='gray.500'>
+                  <UserIcon size='16px' />
+                </InputLeftElement>
+                <Input placeholder='Nome' {...register('name')} />
+              </InputGroup>
+              <FormErrorMessage fontSize='xs'>
+                {errors.name?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.cpf?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>CPF</FormLabel>
+              </VisuallyHidden>
+
+              <Controller
+                control={control}
+                name='cpf'
+                render={({ field: { ref, value, onChange, onBlur } }) => (
+                  <InputGroup>
+                    <InputLeftElement color='gray.500'>
+                      <FingerprintIcon size='16px' />
+                    </InputLeftElement>
+                    <Input
+                      placeholder='CPF'
+                      ref={ref}
+                      value={formatCpfPartials(value)}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                    />
+                  </InputGroup>
+                )}
+              />
+              <FormErrorMessage fontSize='xs'>
+                {errors.cpf?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.birthdate?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>Data de nascimento</FormLabel>
+              </VisuallyHidden>
+              <InputGroup>
+                <InputLeftElement color='gray.500'>
+                  <CalendarIcon size='16px' />
+                </InputLeftElement>
+                <Input
+                  placeholder='Data de nascimento'
+                  type='date'
+                  {...register('birthdate')}
+                />
+              </InputGroup>
+              <FormErrorMessage fontSize='xs'>
+                {errors.birthdate?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.email?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>Email</FormLabel>
+              </VisuallyHidden>
+              <InputGroup>
+                <InputLeftElement color='gray.500'>
+                  <MailIcon size='16px' />
+                </InputLeftElement>
+                <Input
+                  placeholder='Email'
+                  type='email'
+                  {...register('email')}
+                />
+              </InputGroup>
+              <FormErrorMessage fontSize='xs'>
+                {errors.email?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.password?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>Senha</FormLabel>
+              </VisuallyHidden>
+              <InputGroup>
+                <InputLeftElement color='gray.500'>
+                  <LockIcon size='16px' />
+                </InputLeftElement>
+                <Input
+                  placeholder='Senha'
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
+                />
+                <InputRightElement color='gray.500'>
+                  <IconButton
+                    colorScheme='gray'
+                    variant='link'
+                    aria-label={
+                      showPassword ? 'Esconder senha' : 'Mostrar senha'
+                    }
+                    onClick={() => {
+                      setShowPassword(!showPassword)
+                    }}
+                    icon={
+                      showPassword ? (
+                        <EyeOffIcon size='16px' />
+                      ) : (
+                        <EyeIcon size='16px' />
+                      )
+                    }
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage fontSize='xs'>
+                {errors.password?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={errors.passwordConfirmation?.message !== undefined}
+            >
+              <VisuallyHidden>
+                <FormLabel>Confirmação de senha</FormLabel>
+              </VisuallyHidden>
+              <InputGroup>
+                <InputLeftElement color='gray.500'>
+                  <LockIcon size='16px' />
+                </InputLeftElement>
+                <Input
+                  placeholder='Confirme sua senha'
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('passwordConfirmation')}
+                />
+                <InputRightElement color='gray.500'>
+                  <IconButton
+                    colorScheme='gray'
+                    variant='link'
+                    aria-label={
+                      showPassword ? 'Esconder senha' : 'Mostrar senha'
+                    }
+                    onClick={() => {
+                      setShowPassword(!showPassword)
+                    }}
+                    icon={
+                      showPassword ? (
+                        <EyeOffIcon size='16px' />
+                      ) : (
+                        <EyeIcon size='16px' />
+                      )
+                    }
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage fontSize='xs'>
+                {errors.passwordConfirmation?.message}
+              </FormErrorMessage>
+            </FormControl>
+            <HStack w='full' justify='space-between'>
+              <Link href={'/login'}>
+                <Text fontSize='sm'>Já tenho cadastro</Text>
+              </Link>
+              <Button flexShrink={0} type='submit'>
+                Cadastrar
+              </Button>
+            </HStack>
+          </VStack>
+        </chakra.form>
+      </Flex>
+      <Flex
+        display={{ base: 'none', md: 'flex' }}
+        zIndex={1}
+        bg='#32343C21'
+        my='8'
+        mr='8'
+        borderTopRightRadius='50px'
+        borderBottomRightRadius='50px'
+        flex='1'
+        alignItems='center'
+        justifyContent='center'
+        flexDirection='column'
+      >
+        <VStack m='10' spacing='6'>
+          <Heading color='white' size='md' textAlign='center'>
+            Faça seu cadastro
+          </Heading>
+          <Center border='1px solid white' borderRadius='full' p='4'>
+            <PawPrint
+              width='200px'
+              height='200px'
+              fill='white'
+              stroke='white'
+            />
+          </Center>
+          <Text color='white'>E faça seu pet mais feliz.</Text>
+        </VStack>
+      </Flex>
     </Flex>
   )
 }
