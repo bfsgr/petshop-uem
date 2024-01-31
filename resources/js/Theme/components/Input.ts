@@ -17,16 +17,16 @@ const $borderRadius = cssVar('input-border-radius')
 
 const size = {
   lg: {
-    [$borderRadius.variable]: 'radii.sm',
+    [$borderRadius.variable]: 'radii.lg',
   },
   md: {
-    [$borderRadius.variable]: 'radii.sm',
+    [$borderRadius.variable]: 'radii.lg',
   },
   sm: {
-    [$borderRadius.variable]: 'radii.sm',
+    [$borderRadius.variable]: 'radii.lg',
   },
   xs: {
-    [$borderRadius.variable]: 'radii.sm',
+    [$borderRadius.variable]: 'radii.lg',
   },
 }
 

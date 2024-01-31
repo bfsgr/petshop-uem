@@ -39,8 +39,8 @@ const typography = {
   },
 
   fonts: {
-    heading: `Rubik,sans-serif`,
-    body: `Rubik,sans-serif`
+    heading: `Inter,sans-serif`,
+    body: `Inter,sans-serif`,
   },
 
   fontSizes: {

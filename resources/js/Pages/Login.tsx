@@ -3,7 +3,6 @@ import {
   Card,
   CardBody,
   Center,
-  Container,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -102,158 +101,153 @@ function Login({ flash }: Props) {
   }
 
   return (
-    <Flex w="full" minH="100vh" align="center" justify="center">
-      <Container w="full">
-        <Flex
-          boxShadow={{ base: 'none', md: 'base' }}
-          borderRadius="sm"
-          minH="400px"
+    <Flex w='full' minH='100vh' justify='center'>
+      <Flex p='12' borderRadius='sm' minH='full' flexGrow='1'>
+        <Card
+          mx='auto'
+          w='fit-content'
+          boxShadow={{ base: 'base', md: 'none' }}
+          px='4'
+          py='3'
+          flexDirection='row'
+          justifyContent='stretch'
+          borderTopRightRadius={{ base: 'sm', md: 0 }}
+          borderBottomRightRadius={{ base: 'sm', md: 0 }}
         >
-          <Card
-            mx="auto"
-            w="fit-content"
-            boxShadow={{ base: 'base', md: 'none' }}
-            px="4"
-            py="3"
-            flexDirection="row"
-            justifyContent="stretch"
-            borderTopRightRadius={{ base: 'sm', md: 0 }}
-            borderBottomRightRadius={{ base: 'sm', md: 0 }}
+          <chakra.form
+            display='flex'
+            flexDirection='column'
+            noValidate
+            onSubmit={handleSubmit(login, console.error) as any}
           >
-            <chakra.form
-              display="flex"
-              flexDirection="column"
-              noValidate
-              onSubmit={handleSubmit(login, console.error) as any}
-            >
-              <CardBody>
-                <Center
-                  display={{ base: 'flex', md: 'none' }}
-                  mx="auto"
-                  h="fit-content"
-                  mb="5"
-                  border="4px solid"
-                  borderRadius="full"
-                  w="fit-content"
-                  color="orange.500"
-                  p="4"
-                >
-                  <PawPrint size="78px" />
-                </Center>
-                <VStack spacing="3">
-                  <VStack align="start">
-                    <Heading>Bem vindo de volta!</Heading>
-                    <Text fontSize="sm">
-                      Preencha seus dados para acessar sua conta
-                    </Text>
-                  </VStack>
-
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.email?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Email</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <MailIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Email"
-                        type="email"
-                        {...register('email')}
-                      />
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.email?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.password?.message !== undefined}
-                  >
-                    <VisuallyHidden>
-                      <FormLabel>Senha</FormLabel>
-                    </VisuallyHidden>
-                    <InputGroup>
-                      <InputLeftElement color="gray.500">
-                        <LockIcon size="16px" />
-                      </InputLeftElement>
-                      <Input
-                        placeholder="Senha"
-                        type={showPassword ? 'text' : 'password'}
-                        {...register('password')}
-                      />
-                      <InputRightElement color="gray.500">
-                        <IconButton
-                          colorScheme="gray"
-                          variant="link"
-                          aria-label={
-                            showPassword ? 'Esconder senha' : 'Mostrar senha'
-                          }
-                          onClick={() => {
-                            setShowPassword(!showPassword)
-                          }}
-                          icon={
-                            showPassword ? (
-                              <EyeOffIcon size="16px" />
-                            ) : (
-                              <EyeIcon size="16px" />
-                            )
-                          }
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                    <FormErrorMessage fontSize="xs">
-                      {errors.password?.message}
-                    </FormErrorMessage>
-                  </FormControl>
+            <CardBody>
+              <Center
+                display={{ base: 'flex', md: 'none' }}
+                mx='auto'
+                h='fit-content'
+                mb='5'
+                border='4px solid'
+                borderRadius='full'
+                w='fit-content'
+                color='orange.500'
+                p='4'
+              >
+                <PawPrint size='78px' />
+              </Center>
+              <VStack spacing='3'>
+                <VStack align='start'>
+                  <Heading>Bem vindo de volta!</Heading>
+                  <Text fontSize='sm'>
+                    Preencha seus dados para acessar sua conta
+                  </Text>
                 </VStack>
-              </CardBody>
-              <CardFooter>
-                <HStack w="full" justify="space-between">
-                  <Link href={'/register'}>
-                    <Text fontSize="sm">Não tenho conta</Text>
-                  </Link>
-                  <Button isLoading={isLoading} flexShrink={0} type="submit">
-                    Entrar
-                  </Button>
-                </HStack>
-              </CardFooter>
-            </chakra.form>
-          </Card>
-          <Flex
-            display={{ base: 'none', md: 'flex' }}
-            px={4}
-            flex="1"
-            bg="orange.500"
-            align="center"
-            justify="center"
-            direction="column"
-            color="white"
-            borderTopRightRadius="sm"
-            borderBottomRightRadius="sm"
+
+                <FormControl
+                  isRequired
+                  isInvalid={errors.email?.message !== undefined}
+                >
+                  <VisuallyHidden>
+                    <FormLabel>Email</FormLabel>
+                  </VisuallyHidden>
+                  <InputGroup>
+                    <InputLeftElement color='gray.500'>
+                      <MailIcon size='16px' />
+                    </InputLeftElement>
+                    <Input
+                      placeholder='Email'
+                      type='email'
+                      {...register('email')}
+                    />
+                  </InputGroup>
+                  <FormErrorMessage fontSize='xs'>
+                    {errors.email?.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl
+                  isRequired
+                  isInvalid={errors.password?.message !== undefined}
+                >
+                  <VisuallyHidden>
+                    <FormLabel>Senha</FormLabel>
+                  </VisuallyHidden>
+                  <InputGroup>
+                    <InputLeftElement color='gray.500'>
+                      <LockIcon size='16px' />
+                    </InputLeftElement>
+                    <Input
+                      placeholder='Senha'
+                      type={showPassword ? 'text' : 'password'}
+                      {...register('password')}
+                    />
+                    <InputRightElement color='gray.500'>
+                      <IconButton
+                        colorScheme='gray'
+                        variant='link'
+                        aria-label={
+                          showPassword ? 'Esconder senha' : 'Mostrar senha'
+                        }
+                        onClick={() => {
+                          setShowPassword(!showPassword)
+                        }}
+                        icon={
+                          showPassword ? (
+                            <EyeOffIcon size='16px' />
+                          ) : (
+                            <EyeIcon size='16px' />
+                          )
+                        }
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                  <FormErrorMessage fontSize='xs'>
+                    {errors.password?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </VStack>
+            </CardBody>
+            <CardFooter>
+              <HStack w='full' justify='space-between'>
+                <Link href={'/register'}>
+                  <Text fontSize='sm'>Não tenho conta</Text>
+                </Link>
+                <Button isLoading={isLoading} flexShrink={0} type='submit'>
+                  Entrar
+                </Button>
+              </HStack>
+            </CardFooter>
+          </chakra.form>
+        </Card>
+        <Flex
+          display={{ base: 'none', md: 'flex' }}
+          px={4}
+          minW='50%'
+          flex='1'
+          bg='blue.500'
+          align='center'
+          justify='center'
+          direction='column'
+          color='white'
+          borderTopRightRadius='sm'
+          borderBottomRightRadius='sm'
+        >
+          <Center
+            h='fit-content'
+            mb='5'
+            border='4px solid'
+            borderRadius='full'
+            color='white'
+            p='4'
           >
-            <Center
-              h="fit-content"
-              mb="5"
-              border="4px solid"
-              borderRadius="full"
-              color="white"
-              p="4"
-            >
-              <PawPrint size="78px" />
-            </Center>
-            <VStack spacing={1} textAlign="center">
-              <Heading>Seja bem-vindo!</Heading>
-              <Text fontSize="sm">
-                Entre e tenha acesso a mais de 100 petshops pelo Brasil.
-              </Text>
-            </VStack>
-          </Flex>
+            <PawPrint size='78px' />
+          </Center>
+          <VStack spacing={1} textAlign='center'>
+            <Heading>Seja bem-vindo!</Heading>
+            <Text fontSize='sm'>
+              Entre e tenha acesso a mais de 100 petshops pelo Brasil.
+            </Text>
+          </VStack>
         </Flex>
-      </Container>
+      </Flex>
     </Flex>
   )
 }

@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import '@fontsource/rubik/latin.css'
+import '@fontsource/inter/latin.css'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 import * as yup from 'yup'
