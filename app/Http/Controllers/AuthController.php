@@ -74,8 +74,6 @@ class AuthController extends Controller
             }
         );
 
-        Log::error('Teste', ['status' => $status]);
-
         return $status === PasswordFacade::PASSWORD_RESET
             ? redirect('/login')->with('message', __($status))->with('status', 'success')
             : back()->withErrors(['email' => [__($status)]]);

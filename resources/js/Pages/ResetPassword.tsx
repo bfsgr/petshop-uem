@@ -21,33 +21,37 @@ import {
 } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Link as RouterLink, router } from '@inertiajs/react'
-import { EyeIcon, EyeOffIcon, LockIcon, PawPrint } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, PawPrint } from 'lucide-react'
 import { useForm as useClientForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { useEffect, useState } from 'react'
 import { type Flash } from '../@types/Flash.ts'
 
 interface ResetPasswordFormData {
+  email: string
   password: string
   password_confirmation: string
 }
 
 interface Props {
+  errors: Partial<Record<keyof ResetPasswordFormData, string>>
   flash: Flash
   token: string
   email: string
 }
 
-function ResetPassword({ flash, email, token }: Props) {
+function ResetPassword({ flash, email, token, errors: apiErrors }: Props) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useClientForm<ResetPasswordFormData>({
     mode: 'onChange',
     resolver: yupResolver(
       yup
         .object({
+          email: yup.string().required().label('Email'),
           password: yup.string().required().min(8).required().label('Senha'),
           password_confirmation: yup
             .string()
@@ -59,6 +63,7 @@ function ResetPassword({ flash, email, token }: Props) {
         .required()
     ),
     defaultValues: {
+      email,
       password: '',
       password_confirmation: '',
     },
@@ -85,7 +90,6 @@ function ResetPassword({ flash, email, token }: Props) {
     router.post(
       '/nova-senha',
       {
-        email,
         token,
         ...data,
       },
@@ -108,6 +112,15 @@ function ResetPassword({ flash, email, token }: Props) {
       }
     )
   }
+
+  useEffect(() => {
+    for (const key in apiErrors) {
+      setError(key as keyof ResetPasswordFormData, {
+        type: 'manual',
+        message: apiErrors[key as keyof ResetPasswordFormData],
+      })
+    }
+  }, [setError, apiErrors])
 
   return (
     <Flex bg='white' w='full' minH='100vh' position='relative' justify='center'>
@@ -164,6 +177,29 @@ function ResetPassword({ flash, email, token }: Props) {
                   Redefina sua senha para continuar acessando o sistema.
                 </Text>
               </VStack>
+              <FormControl
+                isRequired
+                isInvalid={errors.email?.message !== undefined}
+              >
+                <VisuallyHidden>
+                  <FormLabel>Email</FormLabel>
+                </VisuallyHidden>
+                <InputGroup>
+                  <InputLeftElement color='gray.500'>
+                    <MailIcon size='16px' />
+                  </InputLeftElement>
+                  <Input
+                    bg='white'
+                    placeholder='Email'
+                    {...register('email')}
+                    readOnly
+                    disabled
+                  />
+                </InputGroup>
+                <FormErrorMessage fontSize='xs'>
+                  {errors.email?.message}
+                </FormErrorMessage>
+              </FormControl>
               <FormControl
                 isRequired
                 isInvalid={errors.password?.message !== undefined}
