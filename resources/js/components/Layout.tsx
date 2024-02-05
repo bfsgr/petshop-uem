@@ -60,11 +60,13 @@ function Layout({ title, children, user }: LayoutProps) {
         <SideBarButton href='/home' text='Histórico' icon={<CalendarIcon />} />
         <SideBarButton href='/pets' text='Pets' icon={<PawPrintIcon />} />
         <SideBarButton href='/clientes' text='Clientes' icon={<UserIcon />} />
-        <SideBarButton
-          href='/funcionarios'
-          text='Funcionários'
-          icon={<Briefcase />}
-        />
+        {user.isAdmin && (
+          <SideBarButton
+            href='/funcionarios'
+            text='Funcionários'
+            icon={<Briefcase />}
+          />
+        )}
       </Flex>
       <Flex direction='column' w='full'>
         <Navbar user={user} title={title} />
