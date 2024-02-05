@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
+use App\Models\Worker;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,9 +16,20 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@petshop.uem.br',
+            'phone' => '44999999999',
+            'type' => 'worker',
+            'password' => bcrypt('password'),
+        ]);
+
+        $worker = new Worker([
+            'id' => $admin->id,
+            'role' => 'manager',
+            'hired_at' => now(),
+        ]);
+
+        $worker->save();
     }
 }

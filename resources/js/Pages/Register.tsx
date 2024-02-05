@@ -165,7 +165,7 @@ function Register() {
                 <InputLeftElement color='gray.500'>
                   <UserIcon size='16px' />
                 </InputLeftElement>
-                <Input placeholder='Nome' {...register('name')} />
+                <Input bg='white' placeholder='Nome' {...register('name')} />
               </InputGroup>
               <FormErrorMessage fontSize='xs'>
                 {errors.name?.message}
@@ -188,6 +188,7 @@ function Register() {
                       <FingerprintIcon size='16px' />
                     </InputLeftElement>
                     <Input
+                      bg='white'
                       placeholder='CPF'
                       ref={ref}
                       value={formatCpfPartials(value)}
@@ -213,6 +214,7 @@ function Register() {
                   <CalendarIcon size='16px' />
                 </InputLeftElement>
                 <Input
+                  bg='white'
                   placeholder='Data de nascimento'
                   type='date'
                   {...register('birthdate')}
@@ -234,6 +236,7 @@ function Register() {
                   <MailIcon size='16px' />
                 </InputLeftElement>
                 <Input
+                  bg='white'
                   placeholder='Email'
                   type='email'
                   {...register('email')}
@@ -255,6 +258,7 @@ function Register() {
                   <LockIcon size='16px' />
                 </InputLeftElement>
                 <Input
+                  bg='white'
                   placeholder='Senha'
                   type={showPassword ? 'text' : 'password'}
                   {...register('password')}
@@ -295,6 +299,7 @@ function Register() {
                   <LockIcon size='16px' />
                 </InputLeftElement>
                 <Input
+                  bg='white'
                   placeholder='Confirme sua senha'
                   type={showPassword ? 'text' : 'password'}
                   {...register('passwordConfirmation')}

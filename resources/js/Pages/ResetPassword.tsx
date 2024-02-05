@@ -17,44 +17,55 @@ import {
   useToast,
   InputRightElement,
   IconButton,
+  Link,
 } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link, router } from '@inertiajs/react'
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, PawPrint } from 'lucide-react'
+import { Link as RouterLink, router } from '@inertiajs/react'
+import { EyeIcon, EyeOffIcon, LockIcon, PawPrint } from 'lucide-react'
 import { useForm as useClientForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { useEffect, useState } from 'react'
-import { Flash } from '../@types/Flash.ts'
+import { type Flash } from '../@types/Flash.ts'
 
-interface LoginFormData {
-  email: string
+interface ResetPasswordFormData {
   password: string
+  password_confirmation: string
 }
 
 interface Props {
   flash: Flash
+  token: string
+  email: string
 }
 
-function Login({ flash }: Props) {
+function ResetPassword({ flash, email, token }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useClientForm<LoginFormData>({
+  } = useClientForm<ResetPasswordFormData>({
     mode: 'onChange',
     resolver: yupResolver(
       yup
         .object({
-          email: yup.string().required().email().label('Email'),
           password: yup.string().required().min(8).required().label('Senha'),
+          password_confirmation: yup
+            .string()
+            .required()
+            .oneOf([yup.ref('password')], 'As senhas devem ser iguais')
+            .required()
+            .label('Confirmação de senha'),
         })
         .required()
     ),
     defaultValues: {
-      email: '',
       password: '',
+      password_confirmation: '',
     },
   })
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const toast = useToast()
 
@@ -70,13 +81,12 @@ function Login({ flash }: Props) {
     }
   }, [flash, toast])
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-
-  function login(data: LoginFormData) {
+  function verify(data: ResetPasswordFormData) {
     router.post(
-      '/login',
+      '/nova-senha',
       {
+        email,
+        token,
         ...data,
       },
       {
@@ -87,6 +97,9 @@ function Login({ flash }: Props) {
           setIsLoading(true)
         },
         onFinish: () => {
+          setIsLoading(false)
+        },
+        onSuccess: () => {
           setIsLoading(false)
         },
         onError: () => {
@@ -129,7 +142,7 @@ function Login({ flash }: Props) {
             display='flex'
             flexDirection='column'
             noValidate
-            onSubmit={handleSubmit(login, console.error) as any}
+            onSubmit={handleSubmit(verify, console.error) as any}
           >
             <Center
               display={{ base: 'flex', md: 'none' }}
@@ -146,34 +159,11 @@ function Login({ flash }: Props) {
             </Center>
             <VStack spacing='3'>
               <VStack align='start'>
-                <Heading>Bem vindo de volta!</Heading>
+                <Heading>Olá {email}!</Heading>
                 <Text fontSize='sm'>
-                  Preencha seus dados para acessar sua conta
+                  Redefina sua senha para continuar acessando o sistema.
                 </Text>
               </VStack>
-
-              <FormControl
-                isRequired
-                isInvalid={errors.email?.message !== undefined}
-              >
-                <VisuallyHidden>
-                  <FormLabel>Email</FormLabel>
-                </VisuallyHidden>
-                <InputGroup>
-                  <InputLeftElement color='gray.500'>
-                    <MailIcon size='16px' />
-                  </InputLeftElement>
-                  <Input
-                    bg='white'
-                    placeholder='Email'
-                    type='email'
-                    {...register('email')}
-                  />
-                </InputGroup>
-                <FormErrorMessage fontSize='xs'>
-                  {errors.email?.message}
-                </FormErrorMessage>
-              </FormControl>
               <FormControl
                 isRequired
                 isInvalid={errors.password?.message !== undefined}
@@ -215,13 +205,54 @@ function Login({ flash }: Props) {
                   {errors.password?.message}
                 </FormErrorMessage>
               </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={errors.password_confirmation?.message !== undefined}
+              >
+                <VisuallyHidden>
+                  <FormLabel>Senha</FormLabel>
+                </VisuallyHidden>
+                <InputGroup>
+                  <InputLeftElement color='gray.500'>
+                    <LockIcon size='16px' />
+                  </InputLeftElement>
+                  <Input
+                    bg='white'
+                    placeholder='Confirme sua senha'
+                    type={showPassword ? 'text' : 'password'}
+                    {...register('password_confirmation')}
+                  />
+                  <InputRightElement color='gray.500'>
+                    <IconButton
+                      colorScheme='gray'
+                      variant='link'
+                      aria-label={
+                        showPassword ? 'Esconder senha' : 'Mostrar senha'
+                      }
+                      onClick={() => {
+                        setShowPassword(!showPassword)
+                      }}
+                      icon={
+                        showPassword ? (
+                          <EyeOffIcon size='16px' />
+                        ) : (
+                          <EyeIcon size='16px' />
+                        )
+                      }
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage fontSize='xs'>
+                  {errors.password_confirmation?.message}
+                </FormErrorMessage>
+              </FormControl>
             </VStack>
             <HStack mt='6' w='full' justify='space-between'>
-              <Link href={'/register'}>
-                <Text fontSize='sm'>Não tenho conta</Text>
+              <Link as={RouterLink} href={'/login'}>
+                <Text fontSize='sm'>Voltar</Text>
               </Link>
               <Button isLoading={isLoading} flexShrink={0} type='submit'>
-                Entrar
+                Redefinir
               </Button>
             </HStack>
           </chakra.form>
@@ -258,4 +289,4 @@ function Login({ flash }: Props) {
   )
 }
 
-export default Login
+export default ResetPassword

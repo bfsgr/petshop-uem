@@ -1,16 +1,16 @@
 import Layout from '../components/Layout.tsx'
 import { type User } from '../@types/User.ts'
 
-interface HomeProps {
+interface PetsProps {
   user: User
 }
 
-function Home({ user }: HomeProps) {
+function Pets({ user }: PetsProps) {
   return (
-    <Layout title='Histórico' user={user}>
+    <Layout title='Pets' user={user}>
       <p>Teste</p>
     </Layout>
   )
 }
 
-export default Home
+export default Pets

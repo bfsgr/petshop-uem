@@ -11,30 +11,26 @@ import {
   Text,
   VStack,
   chakra,
+  Button,
 } from '@chakra-ui/react'
 import { Link as RouterLink } from '@inertiajs/react'
 import { useSize } from '@chakra-ui/react-use-size'
 import { useRef } from 'react'
 import { ChevronDown, LogOutIcon } from 'lucide-react'
+import { type User } from '../@types/User.ts'
 
 interface NavbarProps {
   title: string
-  user: {
-    id: number
-    name: string
-    email: string
-    role: string
-  }
+  user: User
 }
 
 function Navbar({ title, user }: NavbarProps) {
-  const ref = useRef<HTMLAnchorElement>(null)
+  const ref = useRef<HTMLButtonElement>(null)
   const triggerSize = useSize(ref)
-
-  function logout() {}
 
   return (
     <Flex
+      bg={'white'}
       flexShrink={0}
       zIndex={1}
       h='58px'
@@ -42,27 +38,34 @@ function Navbar({ title, user }: NavbarProps) {
       justifyContent='space-between'
       px='8'
       w='full'
-      boxShadow='0px 4px 4px 0px #00000040;'
+      borderBottom='1px solid'
+      borderColor='gray.100'
     >
       <Heading color='gray.600' fontWeight={600} fontSize='2xl'>
         {title}
       </Heading>
       <Popover placement='bottom-end'>
         <PopoverTrigger>
-          <Link ref={ref}>
+          <Button variant='unstyled' ref={ref} tabIndex={0}>
             <Flex alignItems='center'>
-              <Avatar boxSize='10' mr='3' name={user.name} />
+              <Avatar boxSize='9' mr='3' name={user.name} />
               <VStack align='start' spacing={0}>
-                <Heading size='sm' color='gray.600' fontWeight={600}>
+                <Heading size='sm' color='gray.600' fontWeight={500}>
                   Petshop <chakra.span fontWeight={800}>AuAu</chakra.span>
                 </Heading>
-                <Text>
-                  {user.role} {user.name}
+                <Text fontSize='sm' fontWeight={500}>
+                  {user.isAdmin && 'Gerente'}
+                  {!user.isAdmin && user.type === 'customer' && 'Cliente'}
+                  {!user.isAdmin && user.type === 'worker' && 'Funcionário'}
+                  &nbsp;
+                  {user.name}
                 </Text>
               </VStack>
-              <ChevronDown width='32px' height='32px' />
+              <Flex ml='3'>
+                <ChevronDown width='28px' height='28px' />
+              </Flex>
             </Flex>
-          </Link>
+          </Button>
         </PopoverTrigger>
         <PopoverContent
           _focus={{}}
@@ -70,12 +73,19 @@ function Navbar({ title, user }: NavbarProps) {
           borderTopLeftRadius='0'
           borderTopRightRadius='0'
           width={triggerSize?.width}
-          border='none'
-          boxShadow='0px 4px 4px 0px #00000040;'
+          mt='px'
+          borderTop='none'
+          borderColor='gray.100'
+          boxShadow='sm'
         >
-          <PopoverArrow />
+          <PopoverArrow boxShadow='-1px -1px 0px 0px #DBDBDB' />
           <PopoverBody>
-            <Link as={RouterLink} href='/login' color='red' onClick={logout}>
+            <Link
+              as={RouterLink}
+              href='/logout'
+              color='red'
+              _focusVisible={{ textDecoration: 'underline' }}
+            >
               <Flex p='1'>
                 <LogOutIcon height='24px' width='24px' />
                 <Text ml='2'>Sair</Text>

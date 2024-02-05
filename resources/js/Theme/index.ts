@@ -10,6 +10,7 @@ import colors from './foundations/colors'
 import shadows from './foundations/shadows'
 import typography from './foundations/typography'
 import styles from './styles'
+import Link from './components/Link.ts'
 
 const overrides = {
   styles,
@@ -20,6 +21,7 @@ const overrides = {
   components: {
     Input,
     Button,
+    Link,
   },
 }
 

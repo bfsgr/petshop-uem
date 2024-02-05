@@ -1,8 +1,9 @@
 import { Link as RouterLink } from '@inertiajs/react'
 import { type ReactNode } from 'react'
 import { Box, Text, Link, Flex } from '@chakra-ui/react'
-import { CalendarIcon, PawPrintIcon, UserIcon } from 'lucide-react'
+import { Briefcase, CalendarIcon, PawPrintIcon, UserIcon } from 'lucide-react'
 import Navbar from './Navbar.tsx'
+import { type User } from '../@types/User.ts'
 
 interface SideBarButtonsProps {
   href: string
@@ -41,12 +42,7 @@ function SideBarButton({ href, text, icon }: SideBarButtonsProps) {
 interface LayoutProps {
   title: string
   children: ReactNode
-  user: {
-    id: number
-    name: string
-    email: string
-    role: string
-  }
+  user: User
 }
 
 function Layout({ title, children, user }: LayoutProps) {
@@ -56,17 +52,33 @@ function Layout({ title, children, user }: LayoutProps) {
         gap='4'
         w='250px'
         direction='column'
-        boxShadow='0px 4px 10px 0px #00000040;'
+        borderRight='1px solid'
+        borderColor='gray.100'
         alignItems='center'
         py='8'
       >
         <SideBarButton href='/home' text='Histórico' icon={<CalendarIcon />} />
         <SideBarButton href='/pets' text='Pets' icon={<PawPrintIcon />} />
         <SideBarButton href='/clientes' text='Clientes' icon={<UserIcon />} />
+        <SideBarButton
+          href='/funcionarios'
+          text='Funcionários'
+          icon={<Briefcase />}
+        />
       </Flex>
       <Flex direction='column' w='full'>
         <Navbar user={user} title={title} />
-        {children}
+        <Flex
+          as='main'
+          direction='column'
+          overflow='auto'
+          bg='gray.50'
+          h='full'
+          px={8}
+          py={6}
+        >
+          {children}
+        </Flex>
       </Flex>
     </Flex>
   )

@@ -59,6 +59,7 @@ const Input: ComponentStyleConfig = helpers.defineMultiStyleConfig({
 
       return {
         field: {
+          bg: 'white',
           _focusVisible: {
             borderColor: fc,
             boxShadow: `0 0 0 1px ${getColorVar(theme, fc)}`,
