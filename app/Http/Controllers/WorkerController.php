@@ -14,11 +14,19 @@ class WorkerController extends Controller
 {
     public function index(Request $request): Response
     {
+        if ($request->user()['is_admin'] === false) {
+            abort(403, 'Unauthorized');
+        }
+
         return Inertia::render('Workers/List');
     }
 
     public function create(Request $request): Response
     {
+        if ($request->user()['is_admin'] === false) {
+            abort(403, 'Unauthorized');
+        }
+
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',

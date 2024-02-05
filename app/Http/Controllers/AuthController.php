@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password as PasswordFacade;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -15,13 +14,17 @@ use Inertia\Response;
 
 class AuthController extends Controller
 {
+    /*
+     * GET /login
+     * */
     public function login(): Response
     {
-        Log::error('Email verified');
-
         return Inertia::render('Login');
     }
 
+    /*
+     * POST /login
+     * */
     public function authenticate(): RedirectResponse
     {
         $validated = request()->validate([
@@ -38,6 +41,9 @@ class AuthController extends Controller
         return redirect()->intended('/home');
     }
 
+    /*
+     * GET /logout
+     * */
     public function logout(): RedirectResponse
     {
         auth()->logout();
@@ -49,12 +55,18 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
+    /*
+     * GET /configurar-senha/{token}?email={email}
+     * */
     public function reset_password(Request $request, string $token): Response
     {
 
         return Inertia::render('ResetPassword', ['token' => $token, 'email' => $request->query('email')]);
     }
 
+    /*
+     * POST /nova-senha
+     * */
     public function update_password(Request $request): RedirectResponse
     {
         $request->validate([
@@ -79,11 +91,17 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
+    /*
+     * GET /register
+     * */
     public function register(): Response
     {
         return Inertia::render('Register');
     }
 
+    /*
+     * POST /register
+     * */
     public function store(Request $request): RedirectResponse
     {
         return redirect('/register');
