@@ -1,0 +1,41 @@
+.rc-table {
+  border-radius: 8px;
+  background-color: white;
+  padding: var(--chakra-space-3);
+
+  table {
+    width: 100%;
+    color: #9a9a9a;
+
+    thead {
+      tr {
+        th {
+          padding: var(--chakra-space-3);
+
+          &:first-child {
+            padding-left: var(--chakra-space-6);
+            padding-right: var(--chakra-space-6);
+          }
+
+          &:last-child {
+            padding-right: var(--chakra-space-6);
+            padding-left: var(--chakra-space-6);
+          }
+        }
+      }
+
+      border-bottom: 1px solid #d8d8d8;
+    }
+
+    tbody {
+      tr {
+        border-top: 1px solid #d8d8d8;
+
+        td {
+          padding: var(--chakra-space-3);
+          text-align: center;
+        }
+      }
+    }
+  }
+}

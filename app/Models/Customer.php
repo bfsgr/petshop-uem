@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * App\Models\Customer
@@ -42,4 +43,9 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     use HasFactory;
+
+    public function user(): MorphOne
+    {
+        return $this->morphOne(User::class, 'subclass', 'type', 'id');
+    }
 }

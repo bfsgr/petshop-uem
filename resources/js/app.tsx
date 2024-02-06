@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client'
 import * as yup from 'yup'
 import Theme from './Theme'
 import { pt } from './yupPt'
+import '../css/table.scss'
 
 async function init() {
   yup.setLocale(pt)

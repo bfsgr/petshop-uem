@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * App\Models\Worker
@@ -48,7 +50,26 @@ class Worker extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'hired_at' => 'datetime',
-        'fired_at' => 'datetime',
+        'hired_at' => 'date',
+        'fired_at' => 'date',
     ];
+
+
+    public function getHiredAtAttribute($value)
+    {
+        return $this->asDateTime($value)->format('Y-m-d');
+    }
+
+
+    public function getFiredAtAttribute($value)
+    {
+        if ($value !== null) {
+            return $this->asDateTime($value)->format('Y-m-d');
+        }
+    }
+
+    public function user(): MorphOne
+    {
+        return $this->morphOne(User::class, 'subclass', 'type', 'id');
+    }
 }

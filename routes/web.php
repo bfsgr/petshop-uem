@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', fn () => redirect('/home'));
+Route::get('/', fn() => redirect('/home'));
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
     Route::get('/funcionarios', [WorkerController::class, 'index'])->name('workers');
     Route::post('/funcionarios', [WorkerController::class, 'create'])->name('create_worker');
+    Route::post('/funcionarios/{id}', [WorkerController::class, 'update'])->name('update_worker');
 });
 
 Route::post('/nova-senha', [AuthController::class, 'update_password'])

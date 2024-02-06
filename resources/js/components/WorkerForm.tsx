@@ -30,6 +30,7 @@ import {
 import { type WorkerFormData } from '../@types/WorkerFormData.ts'
 import { formatPhone } from '../utils/phone.ts'
 import { router } from '@inertiajs/react'
+import DateInput from './DateInput.tsx'
 
 interface WorkerFormProps {
   isOpen: boolean
@@ -68,7 +69,34 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
 
   function registerUser(data: WorkerFormData) {
     if (isEdit) {
-      console.log(data)
+      router.post(
+        `/funcionarios/${data.id}`,
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone.replace(/\D/g, ''),
+          hired_at: data.hired_at,
+          fired_at: data.fired_at ? data.fired_at : null,
+        },
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+            closeModal()
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
     } else {
       router.post(
         '/funcionarios',
@@ -112,17 +140,22 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
           onSubmit={handleSubmit(registerUser, console.error) as any}
         >
           <ModalHeader borderBottom='1px solid' borderColor='gray.100'>
-            <Heading color='gray.600'>Criar novo funcionário</Heading>
+            <Heading color='gray.600'>
+              {!isEdit && 'Criar novo funcionário'}
+              {isEdit && 'Editar funcionário'}
+            </Heading>
             <ModalCloseButton />
           </ModalHeader>
           <ModalBody pb={8} pt={6}>
-            <Alert fontSize='sm' mb={6} status='info' borderRadius='8px'>
-              <AlertIcon w='16px' />
-              <AlertDescription>
-                O funcionário receberá um email com as instruções para acessar o
-                sistema.
-              </AlertDescription>
-            </Alert>
+            {!isEdit && (
+              <Alert fontSize='sm' mb={6} status='info' borderRadius='8px'>
+                <AlertIcon w='16px' />
+                <AlertDescription>
+                  O funcionário receberá um email com as instruções para acessar
+                  o sistema.
+                </AlertDescription>
+              </Alert>
+            )}
             <Stack spacing={4}>
               <FormControl isInvalid={errors.name?.message !== undefined}>
                 <FormLabel>Nome</FormLabel>
@@ -183,10 +216,12 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
               <HStack>
                 <FormControl isInvalid={errors.hired_at?.message !== undefined}>
                   <FormLabel>Data de admissão</FormLabel>
-                  <Input
-                    type='date'
-                    placeholder='Data de admissão'
-                    {...register('hired_at')}
+                  <Controller
+                    control={control}
+                    name='hired_at'
+                    render={({ field }) => (
+                      <DateInput placeholder='Data de admissão' {...field} />
+                    )}
                   />
                   <FormErrorMessage fontSize='xs'>
                     {errors.hired_at?.message}
@@ -197,7 +232,13 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
                     isInvalid={errors.fired_at?.message !== undefined}
                   >
                     <FormLabel>Data de demissão</FormLabel>
-                    <Input type='date' placeholder='Data de demissão' />
+                    <Controller
+                      control={control}
+                      name='fired_at'
+                      render={({ field }) => (
+                        <DateInput placeholder='Data de demissão' {...field} />
+                      )}
+                    />
                     <FormErrorMessage fontSize='xs'>
                       {errors.fired_at?.message}
                     </FormErrorMessage>

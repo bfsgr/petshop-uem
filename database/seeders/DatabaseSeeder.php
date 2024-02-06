@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@petshop.uem.br',
             'phone' => '44999999999',
-            'type' => 'worker',
+            'type' => Worker::class,
             'password' => bcrypt('password'),
         ]);
 

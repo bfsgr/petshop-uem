@@ -12,8 +12,11 @@
         "@fontsource/inter": "^5.0.16",
         "@hookform/resolvers": "^3.3.4",
         "@inertiajs/react": "^1.0.14",
+        "date-fns": "^3.3.1",
         "framer-motion": "^11.0.3",
+        "htmr": "^1.0.2",
         "lucide-react": "^0.316.0",
+        "rc-table": "^7.40.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.49.3",
@@ -37,6 +40,7 @@
         "eslint-plugin-react-refresh": "^0.4.3",
         "laravel-vite-plugin": "^1.0.0",
         "prettier": "^3.0.3",
+        "sass": "^1.70.0",
         "typescript": "^5.2.2",
         "vite": "^5.0.0"
     }

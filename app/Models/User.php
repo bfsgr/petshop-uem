@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -85,17 +85,15 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function subclass(): HasOne
+    public function subclass(): MorphTo
     {
-        if ($this->type === 'worker') {
-            return $this->hasOne(Worker::class, 'id', 'id');
-        } else {
-            return $this->hasOne(Customer::class, 'id', 'id');
-        }
+
+        return $this->morphTo('subclass', 'type', 'id');
+
     }
 
     public function getIsAdminAttribute(): bool
     {
-        return $this->type === 'worker' && $this->subclass->role === 'manager';
+        return $this->type === Worker::class && $this->subclass->role === 'manager';
     }
 }
