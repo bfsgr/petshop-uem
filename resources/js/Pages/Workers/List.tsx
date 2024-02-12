@@ -179,7 +179,7 @@ function List({ user, flash, errors, workers }: WorkersProps) {
 
   return (
     <Layout title='Funcionários' user={user}>
-      <Stack>
+      <Stack spacing={6}>
         <HStack>
           <InputGroup>
             <InputLeftElement color='gray.500'>
@@ -191,7 +191,12 @@ function List({ user, flash, errors, workers }: WorkersProps) {
             Criar novo funcionário
           </Button>
         </HStack>
-        <Table className='custom-table' columns={headers} data={rows} />
+        <Table
+          className='custom-table'
+          emptyText='Sem dados'
+          columns={headers}
+          data={rows}
+        />
         <HStack
           px='px'
           py={1}

@@ -72,9 +72,12 @@ class WorkerController extends Controller
 
         $user = User::findOrFail($id);
 
+        if ($user->type !== Worker::class) {
+            abort(404, 'Not Found');
+        }
+
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
             'phone' => 'required|min:10|max:11',
             'hired_at' => 'required|date|before_or_equal:today',
             'fired_at' => 'nullable|date|after:hired_at',
@@ -83,7 +86,6 @@ class WorkerController extends Controller
 
         $user->update([
             'name' => $validated['name'],
-            'email' => $validated['email'],
             'phone' => $validated['phone'],
         ]);
 

@@ -30,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [JobController::class, 'index'])->name('home');
     Route::get('/pets', [PetController::class, 'index'])->name('pets');
     Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
+    Route::get('/clientes/cadastro', [CustomerController::class, 'form'])->name('customer_form');
+
     Route::get('/funcionarios', [WorkerController::class, 'index'])->name('workers');
     Route::post('/funcionarios', [WorkerController::class, 'create'])->name('create_worker');
     Route::post('/funcionarios/{id}', [WorkerController::class, 'update'])->name('update_worker');

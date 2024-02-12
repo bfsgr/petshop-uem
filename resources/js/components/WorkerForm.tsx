@@ -157,7 +157,10 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
               </Alert>
             )}
             <Stack spacing={4}>
-              <FormControl isInvalid={errors.name?.message !== undefined}>
+              <FormControl
+                isRequired
+                isInvalid={errors.name?.message !== undefined}
+              >
                 <FormLabel>Nome</FormLabel>
                 <InputGroup>
                   <InputLeftElement color='gray.500'>
@@ -176,7 +179,11 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
                   {errors.name?.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.email?.message !== undefined}>
+              <FormControl
+                isRequired
+                isDisabled={isEdit}
+                isInvalid={errors.email?.message !== undefined}
+              >
                 <FormLabel>Email</FormLabel>
                 <InputGroup>
                   <InputLeftElement color='gray.500'>
@@ -188,7 +195,10 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
                   {errors.email?.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={errors.phone?.message !== undefined}>
+              <FormControl
+                isRequired
+                isInvalid={errors.phone?.message !== undefined}
+              >
                 <FormLabel>Celular</FormLabel>
                 <Controller
                   name={'phone'}
@@ -214,7 +224,10 @@ function WorkerForm({ isOpen, onClose }: WorkerFormProps) {
                 </FormErrorMessage>
               </FormControl>
               <HStack>
-                <FormControl isInvalid={errors.hired_at?.message !== undefined}>
+                <FormControl
+                  isRequired
+                  isInvalid={errors.hired_at?.message !== undefined}
+                >
                   <FormLabel>Data de admissão</FormLabel>
                   <Controller
                     control={control}

@@ -40,8 +40,16 @@ function Navbar({ title, user }: NavbarProps) {
       w='full'
       borderBottom='1px solid'
       borderColor='gray.100'
+      overflowX={'hidden'}
     >
-      <Heading color='gray.600' fontWeight={600} fontSize='2xl'>
+      <Heading
+        color='gray.600'
+        fontWeight={600}
+        fontSize='2xl'
+        whiteSpace='nowrap'
+        overflow='hidden'
+        textOverflow='ellipsis'
+      >
         {title}
       </Heading>
       <Popover placement='bottom-end'>

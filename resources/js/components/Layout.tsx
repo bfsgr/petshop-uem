@@ -68,7 +68,7 @@ function Layout({ title, children, user }: LayoutProps) {
           />
         )}
       </Flex>
-      <Flex direction='column' w='full'>
+      <Flex direction='column' w='full' overflow={'auto'}>
         <Navbar user={user} title={title} />
         <Flex
           as='main'
