@@ -1,12 +1,12 @@
-import { Link as RouterLink } from '@inertiajs/react'
-import { type ReactNode } from 'react'
+import { Link as RouterLink, router } from '@inertiajs/react'
+import { type ReactNode, useEffect, useState } from 'react'
 import {
   Box,
-  Text,
-  Link,
   Flex,
-  useBreakpointValue,
+  Link,
+  Text,
   Tooltip,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { Briefcase, CalendarIcon, PawPrintIcon, UserIcon } from 'lucide-react'
 import Navbar from './Navbar.tsx'
@@ -16,14 +16,13 @@ interface SideBarButtonsProps {
   href: string
   text: string
   icon: ReactNode
+  showText: boolean
 }
 
-function SideBarButton({ href, text, icon }: SideBarButtonsProps) {
+function SideBarButton({ href, text, icon, showText }: SideBarButtonsProps) {
   const pathname = window.location.pathname
 
   const selected = pathname.includes(href)
-
-  const showText = useBreakpointValue({ base: false, md: true })
 
   return (
     <Tooltip label={text} placement='right-end' hasArrow isDisabled={showText}>
@@ -34,6 +33,7 @@ function SideBarButton({ href, text, icon }: SideBarButtonsProps) {
         fontSize='lg'
         color={selected ? 'blue.500' : 'gray.500'}
         w='full'
+        h='7'
         textAlign='start'
         fontWeight={600}
         display='flex'
@@ -56,26 +56,72 @@ interface LayoutProps {
 }
 
 function Layout({ title, children, user }: LayoutProps) {
-  const openSideBar = useBreakpointValue({ base: false, md: true })
+  const breakpointForSideBar = useBreakpointValue(
+    { base: false, lg: true },
+    { fallback: 'invalid' }
+  )
+
+  const [shouldOpenSideBar, setShouldOpenSideBar] = useState<boolean>(
+    () =>
+      breakpointForSideBar ??
+      (router.restore('openSideBar') as boolean | undefined) ??
+      false
+  )
+
+  function getLastSideBarState(): boolean {
+    return breakpointForSideBar!
+  }
+
+  useEffect(() => {
+    return router.on('navigate', () => {
+      const state = getLastSideBarState()
+
+      router.remember(state, 'openSideBar')
+    })
+  }, [getLastSideBarState])
+
+  useEffect(() => {
+    if (breakpointForSideBar !== undefined) {
+      setShouldOpenSideBar(breakpointForSideBar)
+    }
+  }, [breakpointForSideBar])
 
   return (
     <Flex minH='100vh' maxH='100vh' alignItems='stretch'>
       <Flex
         gap='4'
-        w={openSideBar ? '250px' : '60px'}
+        maxW={shouldOpenSideBar ? '190px' : '60px'}
+        minW={shouldOpenSideBar ? '190px' : '60px'}
+        transition={'max-width 0.2s, min-width 0.2s'}
         direction='column'
         borderRight='1px solid'
         borderColor='gray.100'
         px='4'
         py='8'
       >
-        <SideBarButton href='/home' text='Histórico' icon={<CalendarIcon />} />
-        <SideBarButton href='/pets' text='Pets' icon={<PawPrintIcon />} />
+        <SideBarButton
+          showText={shouldOpenSideBar}
+          href='/home'
+          text='Histórico'
+          icon={<CalendarIcon />}
+        />
+        <SideBarButton
+          showText={shouldOpenSideBar}
+          href='/pets'
+          text='Pets'
+          icon={<PawPrintIcon />}
+        />
         {user.type === 'App\\Models\\Worker' && (
-          <SideBarButton href='/clientes' text='Clientes' icon={<UserIcon />} />
+          <SideBarButton
+            showText={shouldOpenSideBar}
+            href='/clientes'
+            text='Clientes'
+            icon={<UserIcon />}
+          />
         )}
         {user.isAdmin && (
           <SideBarButton
+            showText={shouldOpenSideBar}
             href='/funcionarios'
             text='Funcionários'
             icon={<Briefcase />}
