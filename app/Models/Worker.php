@@ -39,6 +39,7 @@ class Worker extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'fired_at',
         'hired_at',
         'role',

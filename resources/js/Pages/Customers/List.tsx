@@ -80,7 +80,7 @@ function Customers({ user, customers, flash }: CustomersProps) {
     name: customer.name,
     cpf: formatCpfPartials(customer.subclass.cpf),
     phone: formatPhone(customer.phone),
-    fired_at: customer.status,
+    status: customer.status ? 'Ativo' : 'Inativo',
     action: (
       <IconButton
         size='sm'

@@ -2,6 +2,6 @@ export interface User {
   id: number
   name: string
   email: string
-  type: 'customer' | 'worker'
+  type: 'App\\Models\\Customer' | 'App\\Models\\Worker'
   isAdmin: boolean
 }

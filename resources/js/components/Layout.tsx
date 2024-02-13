@@ -59,7 +59,9 @@ function Layout({ title, children, user }: LayoutProps) {
       >
         <SideBarButton href='/home' text='Histórico' icon={<CalendarIcon />} />
         <SideBarButton href='/pets' text='Pets' icon={<PawPrintIcon />} />
-        <SideBarButton href='/clientes' text='Clientes' icon={<UserIcon />} />
+        {user.type === 'App\\Models\\Worker' && (
+          <SideBarButton href='/clientes' text='Clientes' icon={<UserIcon />} />
+        )}
         {user.isAdmin && (
           <SideBarButton
             href='/funcionarios'

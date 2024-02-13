@@ -48,4 +48,36 @@ class Customer extends Model
     {
         return $this->morphOne(User::class, 'subclass', 'type', 'id');
     }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'id',
+        'cpf',
+        'birthdate',
+        'cep',
+        'street',
+        'number',
+        'district',
+        'city',
+        'state',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'birthdate' => 'date',
+    ];
+
+    public function getBirthdateAttribute($value)
+    {
+        return $this->asDateTime($value)->format('Y-m-d');
+    }
+
 }

@@ -7,6 +7,8 @@ import { useForm as useClientForm, FormProvider } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { isValidCPF } from '../../utils/cpf.ts'
+import { useEffect } from 'react'
+import { useToast } from '@chakra-ui/react'
 
 interface Props {
   flash: Flash
@@ -14,7 +16,7 @@ interface Props {
   errors: Partial<Record<keyof CustomerFormData, string>>
 }
 
-function CreateCustomer({ user }: Props) {
+function CreateCustomer({ user, errors, flash }: Props) {
   const ctx = useClientForm<CustomerFormData>({
     mode: 'onChange',
     resolver: yupResolver(
@@ -26,8 +28,9 @@ function CreateCustomer({ user }: Props) {
           phone: yup
             .string()
             .required()
-            .min(14, 'Celular deve ser pelo menos 10 dígitos')
-            .max(15, 'Celular deve ser no máximo 11 dígitos')
+            .transform((val) => val.replace(/\D/g, ''))
+            .min(10, 'Celular deve ser pelo menos 10 dígitos')
+            .max(11, 'Celular deve ser no máximo 11 dígitos')
             .label('Celular'),
           birthdate: yup
             .date()
@@ -56,7 +59,12 @@ function CreateCustomer({ user }: Props) {
           district: yup.string().required().label('Bairro'),
           city: yup.string().required().label('Cidade'),
           state: yup.string().required().label('Estado'),
-          address_info: yup.string().required().nullable().label('Complemento'),
+          address_info: yup
+            .string()
+            .transform((val) => (val !== '' ? val : null))
+            .required()
+            .nullable()
+            .label('Complemento'),
         })
         .required()
     ),
@@ -76,6 +84,28 @@ function CreateCustomer({ user }: Props) {
       address_info: '',
     },
   })
+
+  useEffect(() => {
+    for (const key in errors) {
+      ctx.setError(key as keyof CustomerFormData, {
+        type: 'manual',
+        message: errors[key as keyof CustomerFormData],
+      })
+    }
+  }, [ctx, errors])
+
+  const toast = useToast()
+
+  useEffect(() => {
+    if (flash.status !== null) {
+      toast({
+        title: flash.message,
+        status: flash.status,
+        isClosable: true,
+        duration: flash.status === 'success' ? 5000 : null,
+      })
+    }
+  }, [flash, toast])
 
   return (
     <Layout title='Clientes > cadastro' user={user}>

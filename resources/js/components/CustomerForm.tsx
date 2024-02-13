@@ -40,6 +40,7 @@ import { useEffect, useState } from 'react'
 import DateInput from './DateInput.tsx'
 import { formatCpfPartials } from '../utils/cpf.ts'
 import { formatPartialCEP } from '../utils/cep.ts'
+import { router } from '@inertiajs/react'
 
 function CustomerForm() {
   const {
@@ -51,7 +52,7 @@ function CustomerForm() {
     setError,
     watch,
     getFieldState,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useClientFormContext<CustomerFormData>()
 
   const isEdit = watch('id') !== null
@@ -103,9 +104,36 @@ function CustomerForm() {
   }, [cep, getFieldState])
 
   function registerCustomer(data: CustomerFormData) {
-    setIsLoading(true)
-    console.log(data)
-    setIsLoading(false)
+    router.post(
+      '/clientes/cadastro',
+      {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        birthdate: data.birthdate,
+        cpf: data.cpf,
+        cep: data.cep,
+        number: data.number,
+        address_info: data.address_info !== '' ? data.address_info : null,
+      },
+      {
+        onCancel: () => {
+          setIsLoading(false)
+        },
+        onStart: () => {
+          setIsLoading(true)
+        },
+        onFinish: () => {
+          setIsLoading(false)
+        },
+        onSuccess: () => {
+          setIsLoading(false)
+        },
+        onError: () => {
+          setIsLoading(false)
+        },
+      }
+    )
   }
 
   return (
@@ -391,7 +419,7 @@ function CustomerForm() {
           <Button type='button' flex={1} variant='outline'>
             Cancelar
           </Button>
-          <Button type='submit' flex={1} isLoading={isLoading}>
+          <Button type='submit' flex={1} isLoading={isLoading || isSubmitting}>
             Salvar
           </Button>
         </HStack>

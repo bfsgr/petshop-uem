@@ -63,8 +63,12 @@ function Navbar({ title, user }: NavbarProps) {
                 </Heading>
                 <Text fontSize='sm' fontWeight={500}>
                   {user.isAdmin && 'Gerente'}
-                  {!user.isAdmin && user.type === 'customer' && 'Cliente'}
-                  {!user.isAdmin && user.type === 'worker' && 'Funcionário'}
+                  {!user.isAdmin &&
+                    user.type === 'App\\Models\\Customer' &&
+                    'Cliente'}
+                  {!user.isAdmin &&
+                    user.type === 'App\\Models\\Worker' &&
+                    'Funcionário'}
                   &nbsp;
                   {user.name}
                 </Text>

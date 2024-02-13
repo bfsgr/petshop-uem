@@ -16,13 +16,10 @@ class WorkerController extends Controller
 {
     public function index(Request $request): Response
     {
-        if ($request->user()['is_admin'] === false) {
-            abort(403, 'Unauthorized');
-        }
-
         $page = $request->input('page', 1);
 
         $workers = User::where('type', Worker::class)
+            ->where('id', '!=', $request->user()->id)
             ->with('subclass')
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);
@@ -35,10 +32,6 @@ class WorkerController extends Controller
 
     public function create(Request $request): RedirectResponse
     {
-        if ($request->user()['is_admin'] === false) {
-            abort(403, 'Unauthorized');
-        }
-
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -55,6 +48,7 @@ class WorkerController extends Controller
         ]);
 
         $user->subclass()->create([
+            'id' => $user->id,
             'role' => 'employee',
             'hired_at' => $validated['hired_at'],
         ]);
@@ -66,10 +60,6 @@ class WorkerController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        if ($request->user()['is_admin'] === false) {
-            abort(403, 'Unauthorized');
-        }
-
         $user = User::findOrFail($id);
 
         if ($user->type !== Worker::class) {
