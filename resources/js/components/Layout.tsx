@@ -1,6 +1,13 @@
 import { Link as RouterLink } from '@inertiajs/react'
 import { type ReactNode } from 'react'
-import { Box, Text, Link, Flex } from '@chakra-ui/react'
+import {
+  Box,
+  Text,
+  Link,
+  Flex,
+  useBreakpointValue,
+  Tooltip,
+} from '@chakra-ui/react'
 import { Briefcase, CalendarIcon, PawPrintIcon, UserIcon } from 'lucide-react'
 import Navbar from './Navbar.tsx'
 import { type User } from '../@types/User.ts'
@@ -16,26 +23,29 @@ function SideBarButton({ href, text, icon }: SideBarButtonsProps) {
 
   const selected = pathname.includes(href)
 
+  const showText = useBreakpointValue({ base: false, md: true })
+
   return (
-    <Link
-      as={RouterLink}
-      href={href}
-      gap='2'
-      fontSize='lg'
-      color={selected ? 'blue.500' : 'gray.500'}
-      w='80%'
-      textAlign='start'
-      mx='auto'
-      fontWeight={600}
-      display='flex'
-      alignItems='center'
-      justifyContent='start'
-    >
-      <Box sx={{ svg: { stroke: selected ? 'blue.500' : 'gray.500' } }}>
-        {icon}
-      </Box>
-      <Text>{text}</Text>
-    </Link>
+    <Tooltip label={text} placement='right-end' hasArrow isDisabled={showText}>
+      <Link
+        as={RouterLink}
+        href={href}
+        gap='2'
+        fontSize='lg'
+        color={selected ? 'blue.500' : 'gray.500'}
+        w='full'
+        textAlign='start'
+        fontWeight={600}
+        display='flex'
+        alignItems='center'
+        justifyContent='start'
+      >
+        <Box sx={{ svg: { stroke: selected ? 'blue.500' : 'gray.500' } }}>
+          {icon}
+        </Box>
+        {showText && <Text>{text}</Text>}
+      </Link>
+    </Tooltip>
   )
 }
 
@@ -46,15 +56,17 @@ interface LayoutProps {
 }
 
 function Layout({ title, children, user }: LayoutProps) {
+  const openSideBar = useBreakpointValue({ base: false, md: true })
+
   return (
     <Flex minH='100vh' maxH='100vh' alignItems='stretch'>
       <Flex
         gap='4'
-        w='250px'
+        w={openSideBar ? '250px' : '60px'}
         direction='column'
         borderRight='1px solid'
         borderColor='gray.100'
-        alignItems='center'
+        px='4'
         py='8'
       >
         <SideBarButton href='/home' text='Histórico' icon={<CalendarIcon />} />
