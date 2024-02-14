@@ -214,6 +214,7 @@ function List({ user, flash, errors, workers }: WorkersProps) {
                 as={RouterLink}
                 href={link.url ?? '#'}
                 color={link.active ? 'blue.500' : 'currentColor'}
+                preserveState
               >
                 {htmr(link.label)}
               </Link>
