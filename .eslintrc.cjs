@@ -11,6 +11,11 @@ module.exports = {
         "plugin:react-hooks/recommended",
         "prettier"
       ],
+      settings: {
+        react: {
+          version: "detect"
+        }
+      },
       plugins: ["prettier", "react-refresh"],
       parserOptions: {
         project: "./tsconfig.json"

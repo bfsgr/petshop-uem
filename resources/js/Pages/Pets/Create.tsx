@@ -1,14 +1,14 @@
 import Layout from '../../components/Layout.tsx'
-import { User } from '../../@types/User.ts'
+import { type User } from '../../@types/User.ts'
 import PetForm from '../../components/PetForm.tsx'
 import { FormProvider, useForm as useClientForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useEffect } from 'react'
 import { useToast } from '@chakra-ui/react'
-import { Flash } from '../../@types/Flash.ts'
-import { PetFormData } from '../../@types/PetFormData.ts'
-import { Customer } from '../../@types/Customer.ts'
+import { type Flash } from '../../@types/Flash.ts'
+import { type PetFormData } from '../../@types/PetFormData.ts'
+import { type Customer } from '../../@types/Customer.ts'
 
 interface Props {
   user: User
@@ -33,7 +33,10 @@ function Create({ user, flash, errors, customers = [] }: Props) {
             .label('Data de nascimento'),
           history: yup
             .string()
-            .transform((val) => (val ? val : null))
+            .transform((val) => {
+              if (val === '') return null
+              return val
+            })
             .required()
             .nullable()
             .label('Histórico'),

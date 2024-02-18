@@ -21,7 +21,7 @@ import { UserIcon } from 'lucide-react'
 import DateInput from './DateInput.tsx'
 import { type PetFormData } from '../@types/PetFormData.ts'
 import { AsyncSelect, Select } from 'chakra-react-select'
-import { Customer } from '../@types/Customer.ts'
+import { type Customer } from '../@types/Customer.ts'
 
 interface Props {
   customers: Customer[]

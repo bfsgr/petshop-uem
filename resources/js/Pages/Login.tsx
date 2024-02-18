@@ -24,7 +24,7 @@ import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, PawPrint } from 'lucide-react'
 import { useForm as useClientForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { useEffect, useState } from 'react'
-import { Flash } from '../@types/Flash.ts'
+import { type Flash } from '../@types/Flash.ts'
 
 interface LoginFormData {
   email: string

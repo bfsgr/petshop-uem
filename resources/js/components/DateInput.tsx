@@ -6,7 +6,7 @@ interface DateInputProps extends Omit<InputProps, 'value' | 'onChange'> {
   onChange: (value: Date | null) => void
 }
 
-function DateInput(
+function InternalDateInput(
   { value, onChange }: DateInputProps,
   ref: Ref<HTMLInputElement> | null
 ) {
@@ -28,4 +28,6 @@ function DateInput(
   )
 }
 
-export default forwardRef(DateInput)
+const DateInput = forwardRef(InternalDateInput)
+
+export default DateInput
