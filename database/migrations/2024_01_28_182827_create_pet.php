@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->date('birthdate');
             $table->string('history')->nullable();
             $table->boolean('status')->default(true);
-            $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->timestamps();
         });
     }

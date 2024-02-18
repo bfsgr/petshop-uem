@@ -14,16 +14,18 @@ class PetController extends Controller
 {
     public function index(Request $request): Response
     {
+        $user = $request->user();
+
         $page = $request->input('page', 1);
 
         $search = $request->input('search', '');
 
         $pets = Pet::query()
             ->with('user.subclass')
+            ->when($user->type === Customer::class, fn($query) => $query->where('customer_id', $user->id))
             ->where('name', 'like', "%$search%")
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);
-
 
         return Inertia::render('Pets/List', [
             'pets' => $pets,
