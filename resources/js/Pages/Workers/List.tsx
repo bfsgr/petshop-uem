@@ -18,16 +18,17 @@ import { FormProvider, useForm as useClientForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { type WorkerFormData } from '../../@types/WorkerFormData.ts'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { type Flash } from '../../@types/Flash.ts'
 import Table from 'rc-table'
 import { type Pagination } from '../../@types/Pagination.ts'
 import { type Worker } from '../../@types/Worker.ts'
 import { formatPhone } from '../../utils/phone.ts'
 import { Edit2, Search } from 'lucide-react'
-import { Link as RouterLink } from '@inertiajs/react'
+import { Link as RouterLink, router } from '@inertiajs/react'
 import htmr from 'htmr'
 import { parseISO } from 'date-fns'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface WorkersProps {
   flash: Flash
@@ -177,6 +178,12 @@ function List({ user, flash, errors, workers }: WorkersProps) {
     ),
   }))
 
+  const [text, setText] = useState('')
+
+  const debounced = useDebouncedCallback((value) => {
+    router.reload({ data: { search: value }, only: ['workers'] })
+  }, 800)
+
   return (
     <Layout title='Funcionários' user={user}>
       <Stack spacing={6}>
@@ -185,7 +192,14 @@ function List({ user, flash, errors, workers }: WorkersProps) {
             <InputLeftElement color='gray.500'>
               <Search width='16px' />
             </InputLeftElement>
-            <Input placeholder='Pesquise' />
+            <Input
+              placeholder='Pesquise'
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value)
+                debounced(e.target.value)
+              }}
+            />
           </InputGroup>
           <Button onClick={onOpen} flexShrink={0}>
             Criar novo funcionário

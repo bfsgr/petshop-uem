@@ -13,13 +13,14 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Edit2, Search } from 'lucide-react'
-import { Link as RouterLink } from '@inertiajs/react'
+import { Link as RouterLink, router } from '@inertiajs/react'
 import Table from 'rc-table'
 import htmr from 'htmr'
 import { type Pagination } from '../../@types/Pagination.ts'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { type Pet } from '../../@types/Pet.ts'
 import { type Flash } from '../../@types/Flash.ts'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface PetsProps {
   pets: Pagination<Pet>
@@ -96,6 +97,12 @@ function List({ user, pets, flash }: PetsProps) {
     ),
   }))
 
+  const [text, setText] = useState('')
+
+  const debounced = useDebouncedCallback((value) => {
+    router.reload({ data: { search: value }, only: ['pets'] })
+  }, 800)
+
   return (
     <Layout title='Pets' user={user}>
       <Stack spacing={6}>
@@ -104,7 +111,14 @@ function List({ user, pets, flash }: PetsProps) {
             <InputLeftElement color='gray.500'>
               <Search width='16px' />
             </InputLeftElement>
-            <Input placeholder='Pesquise' />
+            <Input
+              placeholder='Pesquise'
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value)
+                debounced(e.target.value)
+              }}
+            />
           </InputGroup>
           <Link></Link>
           <Button as={RouterLink} flexShrink={0} href='/pets/cadastro'>

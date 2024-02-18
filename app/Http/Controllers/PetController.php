@@ -16,8 +16,11 @@ class PetController extends Controller
     {
         $page = $request->input('page', 1);
 
+        $search = $request->input('search', '');
+
         $pets = Pet::query()
             ->with('user.subclass')
+            ->where('name', 'like', "%$search%")
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);
 

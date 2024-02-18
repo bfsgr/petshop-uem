@@ -18,8 +18,11 @@ class WorkerController extends Controller
     {
         $page = $request->input('page', 1);
 
+        $search = $request->input('search', '');
+
         $workers = User::where('type', Worker::class)
             ->where('id', '!=', $request->user()->id)
+            ->where('name', 'like', "%$search%")
             ->with('subclass')
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);

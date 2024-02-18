@@ -47,13 +47,12 @@ function Customers({ user, customers, flash }: CustomersProps) {
   const [text, setText] = useState('')
 
   const debounced = useDebouncedCallback((value) => {
-    router.get(
-      '/clientes',
-      { search: value },
-      {
-        preserveState: true,
-      }
-    )
+    router.reload({
+      only: ['customers'],
+      data: {
+        search: value,
+      },
+    })
   }, 800)
 
   function handleEdit(customer: Customer) {
