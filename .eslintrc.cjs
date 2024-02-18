@@ -19,6 +19,7 @@ module.exports = {
         "prettier/prettier": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
         "react/function-component-definition": [
           2,
           { namedComponents: "function-declaration" }
