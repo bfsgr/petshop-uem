@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,8 +15,8 @@ return new class extends Migration
             $table->boolean('bath');
             $table->boolean('groom');
             $table->datetime('date');
-            $table->foreignId('pet_id')->constrained('pet');
-            $table->foreignId('worker_id')->constrained('worker');
+            $table->foreignId('pet_id')->constrained('pets');
+            $table->foreignId('worker_id')->constrained('workers');
             $table->dateTime('accepted_at')->nullable();
             $table->dateTime('rejected_at')->nullable();
             $table->dateTime('preparing_at')->nullable();
