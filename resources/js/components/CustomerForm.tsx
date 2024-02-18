@@ -40,7 +40,7 @@ import { useEffect, useState } from 'react'
 import DateInput from './DateInput.tsx'
 import { formatCpfPartials } from '../utils/cpf.ts'
 import { formatPartialCEP } from '../utils/cep.ts'
-import { router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 
 function CustomerForm() {
   const {
@@ -416,9 +416,11 @@ function CustomerForm() {
           </HStack>
         </Stack>
         <HStack>
-          <Button type='button' flex={1} variant='outline'>
-            Cancelar
-          </Button>
+          <Link href='/clientes' style={{ flex: 1 }}>
+            <Button type='button' w={'full'} variant='outline'>
+              Cancelar
+            </Button>
+          </Link>
           <Button type='submit' flex={1} isLoading={isLoading || isSubmitting}>
             Salvar
           </Button>

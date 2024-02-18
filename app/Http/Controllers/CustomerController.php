@@ -19,8 +19,10 @@ class CustomerController extends Controller
     public function index(Request $request): Response
     {
         $page = $request->input('page', 1);
+        $search = $request->input('search', '');
 
         $customers = User::where('type', Customer::class)
+            ->where('name', 'like', "%$search%")
             ->with('subclass')
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);

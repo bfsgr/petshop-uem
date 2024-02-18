@@ -14,14 +14,15 @@ import {
 } from '@chakra-ui/react'
 import { Edit2, Search } from 'lucide-react'
 import Table from 'rc-table'
-import { Link as RouterLink } from '@inertiajs/react'
+import { Link as RouterLink, router } from '@inertiajs/react'
 import htmr from 'htmr'
 import { type Pagination } from '../../@types/Pagination.ts'
 import { type Customer } from '../../@types/Customer.ts'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { type Flash } from '../../@types/Flash.ts'
 import { formatPhone } from '../../utils/phone.ts'
 import { formatCpfPartials } from '../../utils/cpf.ts'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface CustomersProps {
   user: User
@@ -42,6 +43,18 @@ function Customers({ user, customers, flash }: CustomersProps) {
       })
     }
   }, [flash, toast])
+
+  const [text, setText] = useState('')
+
+  const debounced = useDebouncedCallback((value) => {
+    router.get(
+      '/clientes',
+      { search: value },
+      {
+        preserveState: true,
+      }
+    )
+  }, 800)
 
   function handleEdit(customer: Customer) {
     console.log('Edit', customer)
@@ -101,9 +114,15 @@ function Customers({ user, customers, flash }: CustomersProps) {
             <InputLeftElement color='gray.500'>
               <Search width='16px' />
             </InputLeftElement>
-            <Input placeholder='Pesquise' />
+            <Input
+              placeholder='Pesquise'
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value)
+                debounced(e.target.value)
+              }}
+            />
           </InputGroup>
-          <Link></Link>
           <Button as={RouterLink} flexShrink={0} href='/clientes/cadastro'>
             Cadastrar cliente
           </Button>
