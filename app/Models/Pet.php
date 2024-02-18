@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $breed
  * @property string $type
  * @property string $birthdate
- * @property string $history
+ * @property string|null $history
  * @property int $status
  * @property int $customer_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -39,6 +39,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Pet extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'breed',
+        'birthdate',
+        'history',
+        'customer_id',
+        'type',
+    ];
 
     /**
      * The attributes that should be cast.

@@ -107,7 +107,7 @@ function List({ user, pets, flash }: PetsProps) {
             <Input placeholder='Pesquise' />
           </InputGroup>
           <Link></Link>
-          <Button as={RouterLink} flexShrink={0} href='/clientes/cadastro'>
+          <Button as={RouterLink} flexShrink={0} href='/pets/cadastro'>
             Cadastrar Pet
           </Button>
         </HStack>

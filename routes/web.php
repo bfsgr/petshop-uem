@@ -28,7 +28,10 @@ Route::post('/register', [AuthController::class, 'store']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [JobController::class, 'index'])->name('home');
+
     Route::get('/pets', [PetController::class, 'index'])->name('pets');
+    Route::get('/pets/cadastro', [PetController::class, 'form'])->name('pets_form');
+    Route::post('/pets/cadastro', [PetController::class, 'create'])->name('create_pet');
 
 
     Route::middleware(['can:edit-customers'])->group(function () {
