@@ -22,7 +22,7 @@ class PetController extends Controller
 
         $pets = Pet::query()
             ->with('user.subclass')
-            ->when($user->type === Customer::class, fn($query) => $query->where('customer_id', $user->id))
+            ->when($user->type === Customer::class, fn ($query) => $query->where('customer_id', $user->id))
             ->where('name', 'like', "%$search%")
             ->orderBy('id', 'desc')
             ->paginate(10, ['*'], 'page', $page);
@@ -38,11 +38,11 @@ class PetController extends Controller
 
         return Inertia::render('Pets/Create', [
             'customers' => Inertia::lazy(
-                fn() => User::where('type', Customer::class)
+                fn () => User::where('type', Customer::class)
                     ->where('name', 'like', "%$search%")
                     ->take(10)
                     ->get(['id', 'name'])
-            )
+            ),
         ]);
     }
 
