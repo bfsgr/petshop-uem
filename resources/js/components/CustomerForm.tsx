@@ -104,36 +104,67 @@ function CustomerForm() {
   }, [cep, getFieldState])
 
   function registerCustomer(data: CustomerFormData) {
-    router.post(
-      '/clientes/cadastro',
-      {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        birthdate: data.birthdate,
-        cpf: data.cpf,
-        cep: data.cep,
-        number: data.number,
-        address_info: data.address_info !== '' ? data.address_info : null,
-      },
-      {
-        onCancel: () => {
-          setIsLoading(false)
+    if (isEdit) {
+      router.post(
+        `/clientes/${data.id}`,
+        {
+          name: data.name,
+          phone: data.phone,
+          birthdate: data.birthdate,
+          cep: data.cep,
+          number: data.number,
+          address_info: data.address_info !== '' ? data.address_info : null,
         },
-        onStart: () => {
-          setIsLoading(true)
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    } else {
+      router.post(
+        '/clientes/cadastro',
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          birthdate: data.birthdate,
+          cpf: data.cpf,
+          cep: data.cep,
+          number: data.number,
+          address_info: data.address_info !== '' ? data.address_info : null,
         },
-        onFinish: () => {
-          setIsLoading(false)
-        },
-        onSuccess: () => {
-          setIsLoading(false)
-        },
-        onError: () => {
-          setIsLoading(false)
-        },
-      }
-    )
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    }
   }
 
   return (
@@ -141,13 +172,13 @@ function CustomerForm() {
       noValidate
       onSubmit={handleSubmit(registerCustomer, console.error) as any}
     >
-      <Stack spacing={3}>
+      <Stack spacing={3} mb={6}>
         <Heading color='gray.600'>
           {!isEdit && 'Cadastrar cliente'}
           {isEdit && 'Editar funcionário'}
         </Heading>
         {!isEdit && (
-          <Alert fontSize='sm' mb={6} status='info' borderRadius='8px'>
+          <Alert fontSize='sm' status='info' borderRadius='8px'>
             <AlertIcon w='16px' />
             <AlertDescription>
               O cliente receberá um email com as instruções para acessar o
@@ -175,6 +206,7 @@ function CustomerForm() {
           </FormControl>
           <HStack align={'start'}>
             <FormControl
+              isDisabled={isEdit}
               isRequired
               isInvalid={errors.cpf?.message !== undefined}
             >

@@ -56,7 +56,7 @@ function Customers({ user, customers, flash }: CustomersProps) {
   }, 800)
 
   function handleEdit(customer: Customer) {
-    console.log('Edit', customer)
+    router.get(`/clientes/${customer.id}`)
   }
 
   const headers = [

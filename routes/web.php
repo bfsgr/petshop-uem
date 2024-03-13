@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', fn() => redirect('/home'));
+Route::get('/', fn () => redirect('/home'));
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate']);
@@ -35,11 +35,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pets/cadastro', [PetController::class, 'form'])->name('pets_form');
     Route::post('/pets/cadastro', [PetController::class, 'create'])->name('create_pet');
 
-
     Route::middleware(['can:edit-customers'])->group(function () {
         Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
         Route::get('/clientes/cadastro', [CustomerController::class, 'form'])->name('customer_form');
         Route::post('/clientes/cadastro', [CustomerController::class, 'create'])->name('create_customer');
+        Route::get('/clientes/{id}', [CustomerController::class, 'edit_form'])->name('customer_edit_form');
+        Route::post('/clientes/{id}', [CustomerController::class, 'update'])->name('update_customer');
     });
 
     Route::middleware(['can:edit-workers'])->group(function () {
