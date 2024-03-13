@@ -43,7 +43,7 @@ function List({ user, pets, flash }: PetsProps) {
   }, [flash, toast])
 
   function handleEdit(pet: Pet) {
-    console.log('Edit', pet)
+    router.get(`/pets/${pet.id}`)
   }
 
   const headers = [

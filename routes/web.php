@@ -35,6 +35,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pets/cadastro', [PetController::class, 'form'])->name('pets_form');
     Route::post('/pets/cadastro', [PetController::class, 'create'])->name('create_pet');
 
+    Route::get('/pets/{id}', [PetController::class, 'edit_form'])->name('pets_edit_form');
+    Route::post('/pets/{id}', [PetController::class, 'update'])->name('update_pet');
+
     Route::middleware(['can:edit-customers'])->group(function () {
         Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
         Route::get('/clientes/cadastro', [CustomerController::class, 'form'])->name('customer_form');

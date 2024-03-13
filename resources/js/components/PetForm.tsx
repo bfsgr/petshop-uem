@@ -34,40 +34,74 @@ function PetForm({ customers, user }: Props) {
     register,
     control,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useClientFormContext<PetFormData>()
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const isEdit = watch('id') !== null
+
   function registerCustomer(data: PetFormData) {
-    router.post(
-      '/pets/cadastro',
-      {
-        name: data.name,
-        birthdate: data.birthdate,
-        type: data.type.value,
-        breed: data.breed,
-        history: data.history,
-        customer: data.customer.value,
-      },
-      {
-        onCancel: () => {
-          setIsLoading(false)
+    if (isEdit) {
+      router.post(
+        `/pets/${data.id}`,
+        {
+          name: data.name,
+          birthdate: data.birthdate,
+          type: data.type.value,
+          breed: data.breed,
+          history: data.history,
+          customer: data.customer.value,
         },
-        onStart: () => {
-          setIsLoading(true)
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    } else {
+      router.post(
+        '/pets/cadastro',
+        {
+          name: data.name,
+          birthdate: data.birthdate,
+          type: data.type.value,
+          breed: data.breed,
+          history: data.history,
+          customer: data.customer.value,
         },
-        onFinish: () => {
-          setIsLoading(false)
-        },
-        onSuccess: () => {
-          setIsLoading(false)
-        },
-        onError: () => {
-          setIsLoading(false)
-        },
-      }
-    )
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    }
   }
 
   const loadClk = useRef((_o: any[]) => {})
