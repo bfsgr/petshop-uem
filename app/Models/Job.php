@@ -53,6 +53,19 @@ class Job extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'date',
+        'bath',
+        'groom',
+        'pet_id',
+        'worker_id',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

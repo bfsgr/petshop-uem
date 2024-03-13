@@ -38,8 +38,6 @@ function PetForm({ customers }: Props) {
   const [isLoading, setIsLoading] = useState(false)
 
   function registerCustomer(data: PetFormData) {
-    console.log(data)
-
     router.post(
       '/pets/cadastro',
       {

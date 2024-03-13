@@ -1,5 +1,5 @@
-import Layout from '../components/Layout.tsx'
-import { type User } from '../@types/User.ts'
+import Layout from '../../components/Layout.tsx'
+import { type User } from '../../@types/User.ts'
 import { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import { router, Link as RouterLink } from '@inertiajs/react'
@@ -18,10 +18,10 @@ import {
 import { Edit2, Search } from 'lucide-react'
 import Table from 'rc-table'
 import htmr from 'htmr'
-import { type Pagination } from '../@types/Pagination.ts'
-import { type Job } from '../@types/Job.ts'
+import { type Pagination } from '../../@types/Pagination.ts'
+import { type Job } from '../../@types/Job.ts'
 import { parseISO } from 'date-fns'
-import { type Flash } from '../@types/Flash.ts'
+import { type Flash } from '../../@types/Flash.ts'
 
 interface HomeProps {
   jobs: Pagination<Job>
@@ -29,7 +29,7 @@ interface HomeProps {
   flash: Flash
 }
 
-function Home({ user, jobs, flash }: HomeProps) {
+function List({ user, jobs, flash }: HomeProps) {
   const [text, setText] = useState('')
 
   const debounced = useDebouncedCallback((value) => {
@@ -173,7 +173,7 @@ function Home({ user, jobs, flash }: HomeProps) {
               }}
             />
           </InputGroup>
-          <Button as={RouterLink} flexShrink={0} href='/pets/cadastro'>
+          <Button as={RouterLink} flexShrink={0} href='/home/agendar'>
             Agendar serviço
           </Button>
         </HStack>
@@ -212,4 +212,4 @@ function Home({ user, jobs, flash }: HomeProps) {
   )
 }
 
-export default Home
+export default List
