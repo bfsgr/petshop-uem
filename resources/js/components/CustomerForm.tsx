@@ -65,7 +65,7 @@ function CustomerForm() {
   async function getCepInfo(cep: string) {
     setIsLoadingCep(true)
 
-    const response = await fetch(`https://brasilapi.com.br/api/cep/v2/${cep}`)
+    const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
 
     setIsLoadingCep(false)
 

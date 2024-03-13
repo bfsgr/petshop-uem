@@ -52,7 +52,7 @@ class CustomerController extends Controller
         ]);
 
         try {
-            $cepInfo = json_decode(file_get_contents("https://brasilapi.com.br/api/cep/v2/$validated[cep]"), true);
+            $cepInfo = json_decode(file_get_contents("https://brasilapi.com.br/api/cep/v1/$validated[cep]"), true);
         } catch (ErrorException $e) {
             return back()->withErrors(['cep' => 'CEP inválido.']);
         }
