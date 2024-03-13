@@ -64,7 +64,10 @@ function Create({ user, flash, errors, customers = [] }: Props) {
       birthdate: null as any,
       history: '',
       type: null as any,
-      customer: null as any,
+      customer:
+        user.type === 'App\\Models\\Customer'
+          ? { label: user.name, value: user.id }
+          : (null as any),
     },
   })
 
@@ -93,7 +96,7 @@ function Create({ user, flash, errors, customers = [] }: Props) {
   return (
     <Layout title='Pets > cadastro' user={user}>
       <FormProvider {...ctx}>
-        <PetForm customers={customers} />
+        <PetForm customers={customers} user={user} />
       </FormProvider>
     </Layout>
   )

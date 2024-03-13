@@ -48,20 +48,22 @@ class PetController extends Controller
 
     public function create(Request $request): RedirectResponse
     {
+        $user = $request->user();
+
         $validated = $request->validate([
             'name' => 'required',
             'breed' => 'required',
             'birthdate' => 'required|date|before:today',
             'type' => 'required|in:dog,cat',
             'history' => 'string|nullable',
-            'customer' => [
+            'customer' => $user->type != Customer::class ? [
                 'required', 'exists:users,id', function ($attribute, $value, $fail) {
                     $user = User::findOrFail($value);
                     if ($user->type !== Customer::class) {
                         $fail('O usuário selecionado não é um cliente.');
                     }
                 },
-            ],
+            ] : [],
         ]);
 
         Pet::create([
@@ -70,7 +72,7 @@ class PetController extends Controller
             'birthdate' => $validated['birthdate'],
             'type' => $validated['type'],
             'history' => $validated['history'],
-            'customer_id' => $validated['customer'],
+            'customer_id' => $user->type == Customer::class ? $user->id : $validated['customer'],
         ]);
 
         return redirect()->route('pets')->with('status', 'success')->with('message', 'Pet cadastrado com sucesso.');

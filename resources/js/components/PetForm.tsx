@@ -22,12 +22,14 @@ import DateInput from './DateInput.tsx'
 import { type PetFormData } from '../@types/PetFormData.ts'
 import { AsyncSelect, Select } from 'chakra-react-select'
 import { type Customer } from '../@types/Customer.ts'
+import { type User } from '../@types/User.ts'
 
 interface Props {
   customers: Customer[]
+  user: User
 }
 
-function PetForm({ customers }: Props) {
+function PetForm({ customers, user }: Props) {
   const {
     register,
     control,
@@ -178,32 +180,34 @@ function PetForm({ customers }: Props) {
               {errors.history?.message}
             </FormErrorMessage>
           </FormControl>
-          <Controller
-            control={control}
-            name='customer'
-            render={({ field: { ref, onChange, onBlur, value } }) => (
-              <FormControl
-                isRequired
-                isInvalid={errors.customer?.message !== undefined}
-              >
-                <FormLabel>Tutor</FormLabel>
-                <AsyncSelect
-                  cacheOptions
-                  placeholder='Selecione'
-                  noOptionsMessage={() => 'Nenhuma opção encontrada'}
-                  loadingMessage={() => 'Carregando...'}
-                  loadOptions={loadOptions}
-                  ref={ref}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-                <FormErrorMessage fontSize='xs'>
-                  {errors.customer?.message}
-                </FormErrorMessage>
-              </FormControl>
-            )}
-          />
+          {user.type === 'App\\Models\\Worker' && (
+            <Controller
+              control={control}
+              name='customer'
+              render={({ field: { ref, onChange, onBlur, value } }) => (
+                <FormControl
+                  isRequired
+                  isInvalid={errors.customer?.message !== undefined}
+                >
+                  <FormLabel>Tutor</FormLabel>
+                  <AsyncSelect
+                    cacheOptions
+                    placeholder='Selecione'
+                    noOptionsMessage={() => 'Nenhuma opção encontrada'}
+                    loadingMessage={() => 'Carregando...'}
+                    loadOptions={loadOptions}
+                    ref={ref}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                  />
+                  <FormErrorMessage fontSize='xs'>
+                    {errors.customer?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              )}
+            />
+          )}
         </Stack>
         <HStack>
           <Link href='/pets' style={{ flex: 1 }}>

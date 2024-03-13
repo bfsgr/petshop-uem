@@ -62,6 +62,7 @@ function List({ user, pets, flash }: PetsProps) {
     {
       title: 'Tutor',
       dataIndex: 'customer',
+      hidden: user.type === 'App\\Models\\Customer',
     },
     {
       title: 'Tipo',
