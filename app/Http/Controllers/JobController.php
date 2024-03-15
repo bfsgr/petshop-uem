@@ -69,6 +69,38 @@ class JobController extends Controller
         ]);
     }
 
+    public function edit_form(Request $request, int $id): Response
+    {
+        $job = Job::with('pet.user.subclass')->with('worker')->findOrFail($id);
+
+        $search = $request->input('search', '');
+
+        $customer_id = $request->input('customer_id', '');
+
+        return Inertia::render('Home/Edit', [
+            'job' => $job,
+            'pets' => Inertia::lazy(
+                fn () => Pet::where('customer_id', $customer_id)
+                    ->where('name', 'like', "%$search%")
+                    ->with('user')
+                    ->take(10)
+                    ->get(['id', 'name', 'customer_id'])
+            ),
+            'customers' => Inertia::lazy(
+                fn () => User::where('type', Customer::class)
+                    ->where('name', 'like', "%$search%")
+                    ->take(10)
+                    ->get(['id', 'name'])
+            ),
+            'workers' => Inertia::lazy(
+                fn () => User::where('type', Worker::class)
+                    ->where('name', 'like', "%$search%")
+                    ->take(10)
+                    ->get(['id', 'name'])
+            ),
+        ]);
+    }
+
     public function create(Request $request): RedirectResponse
     {
         $request->validate([
@@ -115,5 +147,77 @@ class JobController extends Controller
 
         return redirect()->route('home')->with('status', 'success')->with('message',
             'Agendamento cadastrado com sucesso.');
+    }
+
+    public function update(Request $request, int $id): RedirectResponse
+    {
+
+        $job = Job::with('pet.user.subclass')->with('worker')->findOrFail($id);
+
+        if ($job['delivered_at'] != null) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Não é possível editar um agendamento já finalizado.');
+        }
+
+        $request->validate([
+            'date' => [
+                'required', 'date', function ($attribute, $value, $fail) {
+                    $date = Carbon::parse($value);
+
+                    if ($date->isWeekend()) {
+                        $fail('Não é possível agendar para finais de semana.');
+
+                        return;
+                    }
+
+                    $start = Carbon::create($date->year, $date->month, $date->day, 8, 0, 0,
+                        new DateTimeZone('America/Sao_Paulo'));
+                    $end = Carbon::create($date->year, $date->month, $date->day, 18, 0, 0,
+                        new DateTimeZone('America/Sao_Paulo'));
+
+                    if (! $date->betweenIncluded($start, $end)) {
+                        $fail('Não é possível agendar para este horário.');
+                    }
+                },
+            ],
+            'groom' => 'required|boolean',
+            'bath' => 'required|boolean',
+            'pet' => 'required|exists:pets,id',
+            'worker' => [
+                'required', 'exists:users,id', function ($attribute, $value, $fail) {
+                    $user = User::findOrFail($value);
+                    if ($user->type !== Worker::class) {
+                        $fail('O usuário selecionado não é um funcionário.');
+                    }
+                },
+            ],
+            'accepted_at' => 'date|nullable',
+            'rejected_at' => 'date|nullable',
+            'preparing_at' => 'date|nullable',
+            'bath_started_at' => 'date|nullable',
+            'groom_started_at' => 'date|nullable',
+            'finished_at' => 'date|nullable',
+            'notified_at' => 'date|nullable',
+            'delivered_at' => 'date|nullable',
+        ]);
+
+        $job->update([
+            'date' => $request->input('date'),
+            'groom' => $request->input('groom'),
+            'bath' => $request->input('bath'),
+            'pet_id' => $request->input('pet'),
+            'worker_id' => $request->input('worker'),
+            'accepted_at' => $request->input('accepted_at'),
+            'rejected_at' => $request->input('rejected_at'),
+            'preparing_at' => $request->input('preparing_at'),
+            'bath_started_at' => $request->input('bath_started_at'),
+            'groom_started_at' => $request->input('groom_started_at'),
+            'finished_at' => $request->input('finished_at'),
+            'notified_at' => $request->input('notified_at'),
+            'delivered_at' => $request->input('delivered_at'),
+        ]);
+
+        return redirect()->route('home')->with('status', 'success')->with('message',
+            'Agendamento atualizado com sucesso.');
     }
 }

@@ -1,4 +1,5 @@
 import { type Pet } from './Pet.ts'
+import { type Worker } from './Worker.ts'
 
 export interface Job {
   id: number

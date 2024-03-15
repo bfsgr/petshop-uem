@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   chakra,
   Checkbox,
@@ -8,6 +9,15 @@ import {
   Heading,
   HStack,
   Stack,
+  Step,
+  StepDescription,
+  StepIndicator,
+  StepNumber,
+  Stepper,
+  StepSeparator,
+  StepStatus,
+  StepTitle,
+  Tooltip,
 } from '@chakra-ui/react'
 import {
   Controller,
@@ -21,6 +31,7 @@ import { AsyncSelect } from 'chakra-react-select'
 import type { Customer } from '../@types/Customer.ts'
 import { type Pet } from '../@types/Pet.ts'
 import { type Worker } from '../@types/Worker.ts'
+import { CheckIcon, Info } from 'lucide-react'
 
 interface Props {
   pets: Pet[]
@@ -44,33 +55,71 @@ function JobForm({ pets, customers, workers }: Props) {
   const customer = watch('customer')
 
   function registerJob(data: JobFormData) {
-    router.post(
-      '/home/agendar',
-      {
-        bath: data.bath,
-        groom: data.groom,
-        date: data.date,
-        pet: data.pet.value,
-        worker: data.worker.value,
-      },
-      {
-        onCancel: () => {
-          setIsLoading(false)
+    if (isEdit) {
+      router.post(
+        `/home/${data.id}`,
+        {
+          bath: data.bath,
+          groom: data.groom,
+          date: data.date,
+          pet: data.pet.value,
+          worker: data.worker.value,
+          created_at: data.created_at,
+          accepted_at: data.accepted_at,
+          preparing_at: data.preparing_at,
+          bath_started_at: data.bath_started_at,
+          groom_started_at: data.groom_started_at,
+          finished_at: data.finished_at,
+          notified_at: data.notified_at,
+          delivered_at: data.delivered_at,
         },
-        onStart: () => {
-          setIsLoading(true)
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    } else {
+      router.post(
+        '/home/agendar',
+        {
+          bath: data.bath,
+          groom: data.groom,
+          date: data.date,
+          pet: data.pet.value,
+          worker: data.worker.value,
         },
-        onFinish: () => {
-          setIsLoading(false)
-        },
-        onSuccess: () => {
-          setIsLoading(false)
-        },
-        onError: () => {
-          setIsLoading(false)
-        },
-      }
-    )
+        {
+          onCancel: () => {
+            setIsLoading(false)
+          },
+          onStart: () => {
+            setIsLoading(true)
+          },
+          onFinish: () => {
+            setIsLoading(false)
+          },
+          onSuccess: () => {
+            setIsLoading(false)
+          },
+          onError: () => {
+            setIsLoading(false)
+          },
+        }
+      )
+    }
   }
 
   const loadCustomersClk = useRef((_o: any[]) => {})
@@ -134,135 +183,288 @@ function JobForm({ pets, customers, workers }: Props) {
     })
   }
 
+  const updateTimes = watch([
+    'created_at',
+    'accepted_at',
+    'preparing_at',
+    'bath_started_at',
+    'groom_started_at',
+    'finished_at',
+    'notified_at',
+    'delivered_at',
+  ] as const)
+
+  const steps = [
+    {
+      key: 'created_at' as const,
+      title: 'Criado',
+    },
+    {
+      key: 'accepted_at' as const,
+      title: 'Aceito',
+    },
+    {
+      key: 'preparing_at' as const,
+      title: 'Em preparação',
+    },
+    {
+      key: 'bath_started_at' as const,
+      title: 'Em banho',
+    },
+    {
+      key: 'groom_started_at' as const,
+      title: 'Em tosa',
+    },
+    {
+      key: 'finished_at' as const,
+      title: 'Finalizado',
+    },
+    {
+      key: 'notified_at' as const,
+      title: 'Notificado',
+    },
+    {
+      key: 'delivered_at' as const,
+      title: 'Entregue',
+    },
+  ]
+
+  let activeStep = 0
+
+  for (let i = updateTimes.length - 1; i >= 0; i--) {
+    if (updateTimes[i] !== null) {
+      activeStep = i
+      break
+    }
+  }
+
+  const locale = Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
   return (
     <chakra.form
       onSubmit={handleSubmit(registerJob, console.error) as any}
       noValidate
     >
-      <Stack spacing={3} mb={6}>
-        <Heading color='gray.600'>
-          {!isEdit && 'Agendar novo serviço'}
-          {isEdit && 'Editar serviço'}
-        </Heading>
-      </Stack>
-      <Stack spacing={6}>
-        <Stack spacing={4}>
-          <FormControl>
-            <FormLabel>Serviços a realizar</FormLabel>
+      <HStack align='stretch' w={'full'} spacing={10}>
+        <Stack flexGrow={1}>
+          <Stack spacing={3} mb={6}>
+            <Heading color='gray.600'>
+              {!isEdit && 'Agendar novo serviço'}
+              {isEdit && 'Editar serviço'}
+            </Heading>
+          </Stack>
+          <Stack spacing={6}>
+            <Stack spacing={4}>
+              <FormControl>
+                <FormLabel>Serviços a realizar</FormLabel>
+                <HStack>
+                  <Checkbox isReadOnly {...register('bath')}>
+                    Banho
+                  </Checkbox>
+                  <Checkbox {...register('groom')}>Tosa</Checkbox>
+                </HStack>
+              </FormControl>
+              <FormControl
+                isRequired
+                isInvalid={errors.date?.message !== undefined}
+              >
+                <FormLabel>Data e horário</FormLabel>
+                <Controller
+                  control={control}
+                  name='date'
+                  render={({ field }) => (
+                    <DateTimeInput placeholder='Data do serviço' {...field} />
+                  )}
+                />
+                <FormErrorMessage fontSize='xs'>
+                  {errors.date?.message}
+                </FormErrorMessage>
+              </FormControl>
+              <Controller
+                control={control}
+                name='customer'
+                render={({ field: { ref, onChange, onBlur, value } }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.customer?.message !== undefined}
+                  >
+                    <FormLabel>Cliente</FormLabel>
+                    <AsyncSelect
+                      cacheOptions
+                      placeholder='Selecione'
+                      noOptionsMessage={() => 'Nenhuma opção encontrada'}
+                      loadingMessage={() => 'Carregando...'}
+                      loadOptions={loadCustomerOptions}
+                      ref={ref}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                    <FormErrorMessage fontSize='xs'>
+                      {errors.customer?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              />
+              <Controller
+                control={control}
+                name='pet'
+                render={({ field: { ref, onChange, onBlur, value } }) => (
+                  <FormControl
+                    isDisabled={customer === null}
+                    isRequired
+                    isInvalid={errors.pet?.message !== undefined}
+                  >
+                    <FormLabel>Pet</FormLabel>
+                    <AsyncSelect
+                      cacheOptions
+                      placeholder='Selecione'
+                      noOptionsMessage={() => 'Nenhuma opção encontrada'}
+                      loadingMessage={() => 'Carregando...'}
+                      loadOptions={loadPetOptions}
+                      ref={ref}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                    <FormErrorMessage fontSize='xs'>
+                      {errors.pet?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              />
+              <Controller
+                control={control}
+                name='worker'
+                render={({ field: { ref, onChange, onBlur, value } }) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={errors.worker?.message !== undefined}
+                  >
+                    <FormLabel>Funcionário</FormLabel>
+                    <AsyncSelect
+                      cacheOptions
+                      placeholder='Selecione'
+                      noOptionsMessage={() => 'Nenhuma opção encontrada'}
+                      loadingMessage={() => 'Carregando...'}
+                      loadOptions={loadWorkerOptions}
+                      ref={ref}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                    <FormErrorMessage fontSize='xs'>
+                      {errors.worker?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                )}
+              />
+            </Stack>
             <HStack>
-              <Checkbox isReadOnly {...register('bath')}>
-                Banho
-              </Checkbox>
-              <Checkbox {...register('groom')}>Tosa</Checkbox>
+              <Link href='/home' style={{ flex: 1 }}>
+                <Button type='button' w={'full'} variant='outline'>
+                  Cancelar
+                </Button>
+              </Link>
+              <Button
+                type='submit'
+                flex={1}
+                isLoading={isLoading || isSubmitting}
+              >
+                Salvar
+              </Button>
             </HStack>
-          </FormControl>
-          <FormControl
-            isRequired
-            isInvalid={errors.date?.message !== undefined}
-          >
-            <FormLabel>Data e horário</FormLabel>
-            <Controller
-              control={control}
-              name='date'
-              render={({ field }) => (
-                <DateTimeInput placeholder='Data do serviço' {...field} />
-              )}
-            />
-            <FormErrorMessage fontSize='xs'>
-              {errors.date?.message}
-            </FormErrorMessage>
-          </FormControl>
-          <Controller
-            control={control}
-            name='customer'
-            render={({ field: { ref, onChange, onBlur, value } }) => (
-              <FormControl
-                isRequired
-                isInvalid={errors.customer?.message !== undefined}
-              >
-                <FormLabel>Cliente</FormLabel>
-                <AsyncSelect
-                  cacheOptions
-                  placeholder='Selecione'
-                  noOptionsMessage={() => 'Nenhuma opção encontrada'}
-                  loadingMessage={() => 'Carregando...'}
-                  loadOptions={loadCustomerOptions}
-                  ref={ref}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-                <FormErrorMessage fontSize='xs'>
-                  {errors.customer?.message}
-                </FormErrorMessage>
-              </FormControl>
-            )}
-          />
-          <Controller
-            control={control}
-            name='pet'
-            render={({ field: { ref, onChange, onBlur, value } }) => (
-              <FormControl
-                isDisabled={customer === null}
-                isRequired
-                isInvalid={errors.pet?.message !== undefined}
-              >
-                <FormLabel>Pet</FormLabel>
-                <AsyncSelect
-                  cacheOptions
-                  placeholder='Selecione'
-                  noOptionsMessage={() => 'Nenhuma opção encontrada'}
-                  loadingMessage={() => 'Carregando...'}
-                  loadOptions={loadPetOptions}
-                  ref={ref}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-                <FormErrorMessage fontSize='xs'>
-                  {errors.pet?.message}
-                </FormErrorMessage>
-              </FormControl>
-            )}
-          />
-          <Controller
-            control={control}
-            name='worker'
-            render={({ field: { ref, onChange, onBlur, value } }) => (
-              <FormControl
-                isRequired
-                isInvalid={errors.worker?.message !== undefined}
-              >
-                <FormLabel>Funcionário</FormLabel>
-                <AsyncSelect
-                  cacheOptions
-                  placeholder='Selecione'
-                  noOptionsMessage={() => 'Nenhuma opção encontrada'}
-                  loadingMessage={() => 'Carregando...'}
-                  loadOptions={loadWorkerOptions}
-                  ref={ref}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-                <FormErrorMessage fontSize='xs'>
-                  {errors.worker?.message}
-                </FormErrorMessage>
-              </FormControl>
-            )}
-          />
+          </Stack>
         </Stack>
-        <HStack>
-          <Link href='/home' style={{ flex: 1 }}>
-            <Button type='button' w={'full'} variant='outline'>
-              Cancelar
-            </Button>
-          </Link>
-          <Button type='submit' flex={1} isLoading={isLoading || isSubmitting}>
-            Salvar
-          </Button>
-        </HStack>
-      </Stack>
+        <Stack hidden={!isEdit} w={'30%'}>
+          <HStack mb={'6'}>
+            <Heading color='gray.600'>Status</Heading>
+            <Tooltip
+              hasArrow
+              fontSize='sm'
+              label='Clique nos números para marcar um novo status'
+            >
+              <Box color='gray.600'>
+                <Info size='16px' />
+              </Box>
+            </Tooltip>
+          </HStack>
+
+          <Stepper index={activeStep} orientation='vertical'>
+            {steps.map((step, index) => (
+              <Controller
+                key={step.key}
+                control={control}
+                name={step.key}
+                render={({
+                  field: { ref, value, onChange },
+                  fieldState: { isDirty },
+                }) => (
+                  <Step key={step.key} ref={ref}>
+                    <StepIndicator
+                      sx={{
+                        '&[data-status="active"][data-fixed="true"]': {
+                          bg: 'blue.500',
+                        },
+                      }}
+                      data-fixed={isDirty ? 'false' : 'true'}
+                      userSelect='none'
+                      cursor={
+                        activeStep === index - 1 ||
+                        (isDirty && activeStep === index && activeStep !== 0)
+                          ? 'pointer'
+                          : 'auto'
+                      }
+                      onClick={() => {
+                        if (value === null && activeStep === index - 1) {
+                          onChange(new Date().toISOString())
+                          return
+                        }
+
+                        if (
+                          isDirty &&
+                          value !== null &&
+                          activeStep === index &&
+                          activeStep !== 0
+                        ) {
+                          onChange(null)
+                        }
+                      }}
+                    >
+                      <StepStatus
+                        complete={<CheckIcon size={'18px'} color='white' />}
+                        active={
+                          isDirty ? (
+                            <StepNumber />
+                          ) : (
+                            <CheckIcon size={'18px'} color='white' />
+                          )
+                        }
+                        incomplete={<StepNumber />}
+                      />
+                    </StepIndicator>
+
+                    <Box flexShrink='0'>
+                      <StepTitle>{step.title}</StepTitle>
+                      <StepDescription>
+                        {value ? locale.format(new Date(value)) : '-'}
+                      </StepDescription>
+                    </Box>
+
+                    <StepSeparator />
+                  </Step>
+                )}
+              />
+            ))}
+          </Stepper>
+        </Stack>
+      </HStack>
     </chakra.form>
   )
 }

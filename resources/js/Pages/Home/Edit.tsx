@@ -12,20 +12,23 @@ import { type Pet } from '../../@types/Pet.ts'
 import { type Customer } from '../../@types/Customer.ts'
 import { type Worker } from '../../@types/Worker.ts'
 import { isWeekend } from 'date-fns'
+import { type Job } from '../../@types/Job.ts'
 
 interface Props {
   flash: Flash
   user: User
+  job: Job
   pets?: Pet[]
   customers?: Customer[]
   workers?: Worker[]
   errors: Partial<Record<keyof JobFormData, string>>
 }
 
-function CreateJob({
+function EditJob({
   user,
   errors,
   flash,
+  job,
   pets = [],
   customers = [],
   workers = [],
@@ -41,7 +44,6 @@ function CreateJob({
           date: yup
             .date()
             .required()
-            .min(new Date(), 'A data deve estar no futuro')
             .test(
               'isWeekday',
               'Não atendemos aos finais de semana',
@@ -86,23 +88,23 @@ function CreateJob({
         .required()
     ),
     defaultValues: {
-      id: null,
+      id: job.id,
       bath: true,
-      groom: false,
-      date: null as any,
-      pet: null as any,
-      worker: null as any,
-      customer: null as any,
-      accepted_at: null,
-      rejected_at: null,
-      preparing_at: null,
-      bath_started_at: null,
-      groom_started_at: null,
-      finished_at: null,
-      notified_at: null,
-      delivered_at: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      groom: job.groom,
+      date: new Date(job.date),
+      pet: { label: job.pet.name, value: job.pet.id },
+      worker: { label: job.worker.name, value: job.worker.id },
+      customer: { label: job.pet.user.name, value: job.pet.user.id },
+      accepted_at: job.accepted_at,
+      rejected_at: job.rejected_at,
+      preparing_at: job.preparing_at,
+      bath_started_at: job.bath_started_at,
+      groom_started_at: job.groom_started_at,
+      finished_at: job.finished_at,
+      notified_at: job.notified_at,
+      delivered_at: job.delivered_at,
+      created_at: job.created_at,
+      updated_at: job.updated_at,
     },
   })
 
@@ -129,7 +131,7 @@ function CreateJob({
   }, [flash, toast])
 
   return (
-    <Layout title='Histórico > Agendar serviço' user={user}>
+    <Layout title='Histórico > Editar serviço' user={user}>
       <FormProvider {...ctx}>
         <JobForm pets={pets} customers={customers} workers={workers} />
       </FormProvider>
@@ -137,4 +139,4 @@ function CreateJob({
   )
 }
 
-export default CreateJob
+export default EditJob

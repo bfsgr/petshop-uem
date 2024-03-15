@@ -31,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home/agendar', [JobController::class, 'form'])->name('job_form');
     Route::post('/home/agendar', [JobController::class, 'create'])->name('create_job');
 
+    Route::get('/home/{id}', [JobController::class, 'edit_form'])->name('job_edit_form');
+    Route::post('/home/{id}', [JobController::class, 'update'])->name('update_job');
+
     Route::get('/pets', [PetController::class, 'index'])->name('pets');
     Route::get('/pets/cadastro', [PetController::class, 'form'])->name('pets_form');
     Route::post('/pets/cadastro', [PetController::class, 'create'])->name('create_pet');

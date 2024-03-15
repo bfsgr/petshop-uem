@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,14 +16,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $date
  * @property int $pet_id
  * @property int $worker_id
- * @property string|null $accepted_at
- * @property string|null $rejected_at
- * @property string|null $preparing_at
- * @property string|null $bath_started_at
- * @property string|null $groom_started_at
- * @property string|null $finished_at
- * @property string|null $notified_at
- * @property string|null $delivered_at
+ * @property Carbon|null $accepted_at
+ * @property Carbon|null $rejected_at
+ * @property Carbon|null $preparing_at
+ * @property Carbon|null $bath_started_at
+ * @property Carbon|null $groom_started_at
+ * @property Carbon|null $finished_at
+ * @property Carbon|null $notified_at
+ * @property Carbon|null $delivered_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -63,6 +64,14 @@ class Job extends Model
         'groom',
         'pet_id',
         'worker_id',
+        'accepted_at',
+        'rejected_at',
+        'preparing_at',
+        'bath_started_at',
+        'groom_started_at',
+        'finished_at',
+        'notified_at',
+        'delivered_at',
     ];
 
     /**
@@ -85,7 +94,6 @@ class Job extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
 
     public function pet(): BelongsTo
     {

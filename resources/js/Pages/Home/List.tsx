@@ -37,7 +37,7 @@ function List({ user, jobs, flash }: HomeProps) {
   }, 800)
 
   function handleEdit(job: Job) {
-    console.log('Edit', job)
+    router.get(`/home/${job.id}`)
   }
 
   const toast = useToast()
@@ -79,7 +79,7 @@ function List({ user, jobs, flash }: HomeProps) {
     }
 
     if (job.accepted_at) {
-      return 'Aceitado'
+      return 'Aceito'
     }
 
     if (job.rejected_at) {
@@ -146,6 +146,7 @@ function List({ user, jobs, flash }: HomeProps) {
     status: generateStatus(job),
     action: (
       <IconButton
+        hidden={job.delivered_at !== null}
         size='sm'
         aria-label='Editar'
         icon={<Edit2 size='16px' />}
