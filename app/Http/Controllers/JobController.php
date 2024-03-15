@@ -33,7 +33,21 @@ class JobController extends Controller
                 }
             })
             ->whereHas('pet.user', fn ($query) => $query->where('name', 'like', "%$search%"))
-            ->orderBy('id', 'desc')
+            ->orderByRaw('
+                CASE 
+                    WHEN accepted_at IS NULL AND rejected_at IS NULL THEN 0
+                    WHEN rejected_at IS NULL THEN 1
+                    WHEN delivered_at IS NOT NULL THEN 2
+                    ELSE 3
+                END,
+                COALESCE(accepted_at, rejected_at) DESC NULLS FIRST,
+                notified_at, 
+                finished_at, 
+                groom_started_at, 
+                bath_started_at, 
+                preparing_at,
+                delivered_at NULLS LAST'
+            )
             ->paginate(10, ['*'], 'page', $page);
 
         return Inertia::render('Home/List', [
