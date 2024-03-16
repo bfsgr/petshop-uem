@@ -6,29 +6,32 @@ services:
       dockerfile: Dockerfile
     container_name: app
     restart: unless-stopped
-    expose:
-      - "9000"
     ports:
-      - "9000:9000"
+      - "9000:80"
     networks:
       - app-network
     volumes:
-      - app:/var/www
-    links:
-      - webserver
+      - app:/var/www/html/database
+    environment:
+      APP_NAME: "Petshop UEM"
+      APP_DEBUG: "false"
+      MAIL_MAILER: "smtp"
+      MAIL_HOST: "mailhog"
+      MAIL_PORT: "1025"
+      MAIL_USERNAME: "mailhog"
+      MAIL_PASSWORD: "mailhog"
+      MAIL_ENCRYPTION: "null"
+      MAIL_FROM_ADDRESS: "petshop@uem.br"
+      MAIL_FROM_NAME: "Petshop UEM"
 
-  webserver:
-    image: nginx:alpine
-    container_name: webserver
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+      - app-network
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
     restart: unless-stopped
-    volumes:
-      - app:/var/www:ro
-      - ./nginx/conf.d/:/etc/nginx/conf.d/:z
-    ports:
-      - "8000:80"
-    networks:
-      - app-network
-
 
 volumes:
   app:
