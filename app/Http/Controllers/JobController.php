@@ -262,4 +262,31 @@ class JobController extends Controller
         return redirect()->route('home')->with('status', 'success')->with('message',
             'Agendamento atualizado com sucesso.');
     }
+
+    public function cancel(int $id): RedirectResponse
+    {
+        $user = request()->user();
+
+        if ($user->type !== Customer::class) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Você não tem permissão para cancelar este agendamento.');
+        }
+
+        $job = Job::findOrFail($id);
+
+        if ($job->pet->user->id !== $user->id) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Você não tem permissão para cancelar este agendamento.');
+        }
+
+        if ($job->preparing_at != null) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Não é possível cancelar um agendamento que já passou pela preparação.');
+        }
+
+        $job->delete();
+
+        return redirect()->route('home')->with('status', 'success')->with('message',
+            'Agendamento cancelado com sucesso.');
+    }
 }

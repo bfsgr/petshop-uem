@@ -18,6 +18,7 @@ import {
   StepStatus,
   StepTitle,
   Tooltip,
+  Link as ChakraLink,
 } from '@chakra-ui/react'
 import {
   Controller,
@@ -396,6 +397,18 @@ function JobForm({ pets, customers, workers, user }: Props) {
                 Salvar
               </Button>
             </HStack>
+            <ChakraLink
+              hidden={!isEdit || watch('preparing_at') !== null}
+              as={Link}
+              textAlign='center'
+              href={`/home/cancelar/${watch('id')}`}
+              flex={1}
+              fontSize={'sm'}
+              color='red.500'
+              textDecoration={'underline'}
+            >
+              Cancelar agendamento
+            </ChakraLink>
           </Stack>
         </Stack>
         <Stack hidden={!isEdit} w={'30%'}>

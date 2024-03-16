@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [JobController::class, 'index'])->name('home');
     Route::get('/home/agendar', [JobController::class, 'form'])->name('job_form');
     Route::post('/home/agendar', [JobController::class, 'create'])->name('create_job');
+    Route::get('/home/cancelar/{id}', [JobController::class, 'cancel'])->name('cancel_job');
 
     Route::get('/home/{id}', [JobController::class, 'edit_form'])->name('job_edit_form');
     Route::post('/home/{id}', [JobController::class, 'update'])->name('update_job');
