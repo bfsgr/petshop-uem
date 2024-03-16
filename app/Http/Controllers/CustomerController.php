@@ -61,6 +61,7 @@ class CustomerController extends Controller
             'cep' => 'required|digits:8',
             'number' => 'required',
             'address_info' => 'nullable',
+            'password' => 'nullable|confirmed|min:8',
         ]);
 
         try {
@@ -74,7 +75,7 @@ class CustomerController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'type' => Customer::class,
-            'password' => Hash::make(Str::random()),
+            'password' => Hash::make($validated['password'] ?? Str::random()),
         ]);
 
         $user->subclass()->create([
@@ -90,9 +91,15 @@ class CustomerController extends Controller
             'address_info' => $validated['address_info'],
         ]);
 
-        Password::sendResetLink(['email' => $validated['email']]);
+        if (! $validated['password']) {
+            Password::sendResetLink(['email' => $validated['email']]);
 
-        return redirect()->route('customers')->with('status', 'success')->with('message', 'Cliente criado!');
+            return redirect()->route('customers')->with('status', 'success')->with('message', 'Cliente criado!');
+        }
+
+        auth()->login($user);
+
+        return redirect()->route('home')->with('status', 'success')->with('message', 'Conta criada com sucesso!');
     }
 
     public function update(Request $request, int $id): RedirectResponse

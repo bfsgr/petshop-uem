@@ -26,6 +26,8 @@ Route::get('/logout', [AuthController::class, 'logout']);
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'store']);
 
+Route::post('/clientes/cadastro', [CustomerController::class, 'create'])->name('create_customer');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [JobController::class, 'index'])->name('home');
     Route::get('/home/agendar', [JobController::class, 'form'])->name('job_form');
@@ -44,7 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['can:edit-customers'])->group(function () {
         Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
         Route::get('/clientes/cadastro', [CustomerController::class, 'form'])->name('customer_form');
-        Route::post('/clientes/cadastro', [CustomerController::class, 'create'])->name('create_customer');
         Route::get('/clientes/{id}', [CustomerController::class, 'edit_form'])->name('customer_edit_form');
         Route::post('/clientes/{id}', [CustomerController::class, 'update'])->name('update_customer');
     });

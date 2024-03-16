@@ -10,6 +10,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
@@ -18,8 +19,11 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import {
+  EyeIcon,
+  EyeOffIcon,
   FingerprintIcon,
   Locate,
+  LockIcon,
   MailIcon,
   Map,
   MapPinned,
@@ -42,7 +46,11 @@ import { formatCpfPartials } from '../utils/cpf.ts'
 import { formatPartialCEP } from '../utils/cep.ts'
 import { Link, router } from '@inertiajs/react'
 
-function CustomerForm() {
+interface Props {
+  isClient: boolean
+}
+
+function CustomerForm({ isClient }: Props) {
   const {
     register,
     control,
@@ -145,6 +153,11 @@ function CustomerForm() {
           cep: data.cep,
           number: data.number,
           address_info: data.address_info !== '' ? data.address_info : null,
+          password: data.password !== '' ? data.password : null,
+          password_confirmation:
+            data.password_confirmation !== ''
+              ? data.password_confirmation
+              : null,
         },
         {
           onCancel: () => {
@@ -167,17 +180,19 @@ function CustomerForm() {
     }
   }
 
+  const [showPassword, setShowPassword] = useState(false)
+
   return (
     <chakra.form
       noValidate
       onSubmit={handleSubmit(registerCustomer, console.error) as any}
     >
       <Stack spacing={3} mb={6}>
-        <Heading color='gray.600'>
+        <Heading hidden={isClient} color='gray.600'>
           {!isEdit && 'Cadastrar cliente'}
-          {isEdit && 'Editar funcionário'}
+          {isEdit && 'Editar cliente'}
         </Heading>
-        {!isEdit && (
+        {!isEdit && !isClient && (
           <Alert fontSize='sm' status='info' borderRadius='8px'>
             <AlertIcon w='16px' />
             <AlertDescription>
@@ -302,6 +317,82 @@ function CustomerForm() {
             />
             <FormErrorMessage fontSize='xs'>
               {errors.phone?.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl
+            hidden={!isClient}
+            isRequired
+            isInvalid={errors.password?.message !== undefined}
+          >
+            <FormLabel>Senha</FormLabel>
+            <InputGroup>
+              <InputLeftElement color='gray.500'>
+                <LockIcon size='16px' />
+              </InputLeftElement>
+              <Input
+                bg='white'
+                placeholder='Senha'
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+              />
+              <InputRightElement color='gray.500'>
+                <IconButton
+                  colorScheme='gray'
+                  variant='link'
+                  aria-label={showPassword ? 'Esconder senha' : 'Mostrar senha'}
+                  onClick={() => {
+                    setShowPassword(!showPassword)
+                  }}
+                  icon={
+                    showPassword ? (
+                      <EyeOffIcon size='16px' />
+                    ) : (
+                      <EyeIcon size='16px' />
+                    )
+                  }
+                />
+              </InputRightElement>
+            </InputGroup>
+            <FormErrorMessage fontSize='xs'>
+              {errors.password?.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl
+            hidden={!isClient}
+            isRequired
+            isInvalid={errors.password_confirmation?.message !== undefined}
+          >
+            <FormLabel>Confirmação de senha</FormLabel>
+            <InputGroup>
+              <InputLeftElement color='gray.500'>
+                <LockIcon size='16px' />
+              </InputLeftElement>
+              <Input
+                bg='white'
+                placeholder='Confirme sua senha'
+                type={showPassword ? 'text' : 'password'}
+                {...register('password_confirmation')}
+              />
+              <InputRightElement color='gray.500'>
+                <IconButton
+                  colorScheme='gray'
+                  variant='link'
+                  aria-label={showPassword ? 'Esconder senha' : 'Mostrar senha'}
+                  onClick={() => {
+                    setShowPassword(!showPassword)
+                  }}
+                  icon={
+                    showPassword ? (
+                      <EyeOffIcon size='16px' />
+                    ) : (
+                      <EyeIcon size='16px' />
+                    )
+                  }
+                />
+              </InputRightElement>
+            </InputGroup>
+            <FormErrorMessage fontSize='xs'>
+              {errors.password_confirmation?.message}
             </FormErrorMessage>
           </FormControl>
           <Divider />
@@ -448,7 +539,7 @@ function CustomerForm() {
           </HStack>
         </Stack>
         <HStack>
-          <Link href='/clientes' style={{ flex: 1 }}>
+          <Link href={isClient ? '/login' : '/clientes'} style={{ flex: 1 }}>
             <Button type='button' w={'full'} variant='outline'>
               Cancelar
             </Button>

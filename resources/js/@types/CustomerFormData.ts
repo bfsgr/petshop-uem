@@ -12,4 +12,6 @@ export interface CustomerFormData {
   city: string
   state: string
   address_info: string | null
+  password: string
+  password_confirmation: string
 }
