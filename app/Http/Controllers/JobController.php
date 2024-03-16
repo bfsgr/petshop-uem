@@ -151,6 +151,13 @@ class JobController extends Controller
             ],
         ]);
 
+        $user = $request->user();
+
+        if ($user->type === Customer::class && Pet::with('user')->findOrFail($request->input('pet'))['user']['id'] !== $user->id) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Você não tem permissão para criar um agendamento para esse pet.');
+        }
+
         Job::create([
             'date' => $request->input('date'),
             'groom' => $request->input('groom'),

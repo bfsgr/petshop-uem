@@ -148,7 +148,7 @@ function List({ user, jobs, flash }: HomeProps) {
       job.accepted_at === null &&
       job.rejected_at === null &&
       user.type === 'App\\Models\\Worker' ? (
-        <HStack>
+        <HStack justify={'center'}>
           <IconButton
             colorScheme='green'
             hidden={job.delivered_at !== null}
