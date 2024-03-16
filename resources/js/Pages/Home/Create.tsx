@@ -92,7 +92,10 @@ function CreateJob({
       date: null as any,
       pet: null as any,
       worker: null as any,
-      customer: null as any,
+      customer:
+        user.type === 'App\\Models\\Customer'
+          ? { label: user.name, value: user.id }
+          : (null as any),
       accepted_at: null,
       rejected_at: null,
       preparing_at: null,
@@ -131,7 +134,12 @@ function CreateJob({
   return (
     <Layout title='Histórico > Agendar serviço' user={user}>
       <FormProvider {...ctx}>
-        <JobForm pets={pets} customers={customers} workers={workers} />
+        <JobForm
+          user={user}
+          pets={pets}
+          customers={customers}
+          workers={workers}
+        />
       </FormProvider>
     </Layout>
   )

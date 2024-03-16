@@ -165,8 +165,19 @@ class JobController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        $user = $request->user();
 
         $job = Job::with('pet.user.subclass')->with('worker')->findOrFail($id);
+
+        if ($user->type === Customer::class && $job->pet->user->id !== $user->id) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Você não tem permissão para editar este agendamento.');
+        }
+
+        if ($user->type === Customer::class && ($job->accepted_at != null || $job['rejected_at'] != null)) {
+            return redirect()->route('home')->with('status', 'error')->with('message',
+                'Não é possível editar um agendamento já aceito ou rejeitado.');
+        }
 
         if ($job['delivered_at'] != null) {
             return redirect()->route('home')->with('status', 'error')->with('message',
@@ -215,21 +226,31 @@ class JobController extends Controller
             'delivered_at' => 'date|nullable',
         ]);
 
-        $job->update([
-            'date' => $request->input('date'),
-            'groom' => $request->input('groom'),
-            'bath' => $request->input('bath'),
-            'pet_id' => $request->input('pet'),
-            'worker_id' => $request->input('worker'),
-            'accepted_at' => $request->input('accepted_at'),
-            'rejected_at' => $request->input('rejected_at'),
-            'preparing_at' => $request->input('preparing_at'),
-            'bath_started_at' => $request->input('bath_started_at'),
-            'groom_started_at' => $request->input('groom_started_at'),
-            'finished_at' => $request->input('finished_at'),
-            'notified_at' => $request->input('notified_at'),
-            'delivered_at' => $request->input('delivered_at'),
-        ]);
+        if ($user->type === Worker::class) {
+            $job->update([
+                'date' => $request->input('date'),
+                'groom' => $request->input('groom'),
+                'bath' => $request->input('bath'),
+                'pet_id' => $request->input('pet'),
+                'worker_id' => $request->input('worker'),
+                'accepted_at' => $request->input('accepted_at'),
+                'rejected_at' => $request->input('rejected_at'),
+                'preparing_at' => $request->input('preparing_at'),
+                'bath_started_at' => $request->input('bath_started_at'),
+                'groom_started_at' => $request->input('groom_started_at'),
+                'finished_at' => $request->input('finished_at'),
+                'notified_at' => $request->input('notified_at'),
+                'delivered_at' => $request->input('delivered_at'),
+            ]);
+        } else {
+            $job->update([
+                'date' => $request->input('date'),
+                'groom' => $request->input('groom'),
+                'bath' => $request->input('bath'),
+                'pet_id' => $request->input('pet'),
+                'worker_id' => $request->input('worker'),
+            ]);
+        }
 
         return redirect()->route('home')->with('status', 'success')->with('message',
             'Agendamento atualizado com sucesso.');

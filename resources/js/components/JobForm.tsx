@@ -32,14 +32,16 @@ import type { Customer } from '../@types/Customer.ts'
 import { type Pet } from '../@types/Pet.ts'
 import { type Worker } from '../@types/Worker.ts'
 import { CheckIcon, Info } from 'lucide-react'
+import { type User } from '../@types/User.ts'
 
 interface Props {
+  user: User
   pets: Pet[]
   customers: Customer[]
   workers: Worker[]
 }
 
-function JobForm({ pets, customers, workers }: Props) {
+function JobForm({ pets, customers, workers, user }: Props) {
   const {
     register,
     control,
@@ -53,6 +55,10 @@ function JobForm({ pets, customers, workers }: Props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const customer = watch('customer')
+
+  const isDisabled =
+    user.type === 'App\\Models\\Customer' &&
+    (watch('accepted_at') !== null || watch('rejected_at') !== null)
 
   function registerJob(data: JobFormData) {
     if (isEdit) {
@@ -264,13 +270,20 @@ function JobForm({ pets, customers, workers }: Props) {
               <FormControl>
                 <FormLabel>Serviços a realizar</FormLabel>
                 <HStack>
-                  <Checkbox isReadOnly {...register('bath')}>
+                  <Checkbox
+                    isDisabled={isDisabled}
+                    isReadOnly
+                    {...register('bath')}
+                  >
                     Banho
                   </Checkbox>
-                  <Checkbox {...register('groom')}>Tosa</Checkbox>
+                  <Checkbox isDisabled={isDisabled} {...register('groom')}>
+                    Tosa
+                  </Checkbox>
                 </HStack>
               </FormControl>
               <FormControl
+                isDisabled={isDisabled}
                 isRequired
                 isInvalid={errors.date?.message !== undefined}
               >
@@ -291,6 +304,7 @@ function JobForm({ pets, customers, workers }: Props) {
                 name='customer'
                 render={({ field: { ref, onChange, onBlur, value } }) => (
                   <FormControl
+                    hidden={user.type === 'App\\Models\\Customer'}
                     isRequired
                     isInvalid={errors.customer?.message !== undefined}
                   >
@@ -317,7 +331,7 @@ function JobForm({ pets, customers, workers }: Props) {
                 name='pet'
                 render={({ field: { ref, onChange, onBlur, value } }) => (
                   <FormControl
-                    isDisabled={customer === null}
+                    isDisabled={customer === null || isDisabled}
                     isRequired
                     isInvalid={errors.pet?.message !== undefined}
                   >
@@ -345,6 +359,7 @@ function JobForm({ pets, customers, workers }: Props) {
                 render={({ field: { ref, onChange, onBlur, value } }) => (
                   <FormControl
                     isRequired
+                    isDisabled={isDisabled}
                     isInvalid={errors.worker?.message !== undefined}
                   >
                     <FormLabel>Funcionário</FormLabel>
@@ -369,10 +384,11 @@ function JobForm({ pets, customers, workers }: Props) {
             <HStack>
               <Link href='/home' style={{ flex: 1 }}>
                 <Button type='button' w={'full'} variant='outline'>
-                  Cancelar
+                  {isDisabled ? 'Voltar' : 'Cancelar'}
                 </Button>
               </Link>
               <Button
+                hidden={isDisabled}
                 type='submit'
                 flex={1}
                 isLoading={isLoading || isSubmitting}
@@ -385,15 +401,17 @@ function JobForm({ pets, customers, workers }: Props) {
         <Stack hidden={!isEdit} w={'30%'}>
           <HStack mb={'6'}>
             <Heading color='gray.600'>Status</Heading>
-            <Tooltip
-              hasArrow
-              fontSize='sm'
-              label='Clique nos números para marcar um novo status'
-            >
-              <Box color='gray.600'>
-                <Info size='16px' />
-              </Box>
-            </Tooltip>
+            {user.type !== 'App\\Models\\Customer' && (
+              <Tooltip
+                hasArrow
+                fontSize='sm'
+                label='Clique nos números para marcar um novo status'
+              >
+                <Box color='gray.600'>
+                  <Info size='16px' />
+                </Box>
+              </Tooltip>
+            )}
           </HStack>
 
           <Stepper index={activeStep} orientation='vertical'>
@@ -422,6 +440,8 @@ function JobForm({ pets, customers, workers }: Props) {
                           : 'auto'
                       }
                       onClick={() => {
+                        if (user.type === 'App\\Models\\Customer') return
+
                         if (value === null && activeStep === index - 1) {
                           onChange(new Date().toISOString())
                           return

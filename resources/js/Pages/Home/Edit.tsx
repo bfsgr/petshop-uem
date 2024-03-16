@@ -133,7 +133,12 @@ function EditJob({
   return (
     <Layout title='Histórico > Editar serviço' user={user}>
       <FormProvider {...ctx}>
-        <JobForm pets={pets} customers={customers} workers={workers} />
+        <JobForm
+          user={user}
+          pets={pets}
+          customers={customers}
+          workers={workers}
+        />
       </FormProvider>
     </Layout>
   )
