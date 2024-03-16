@@ -16,7 +16,7 @@ import {
 import { Link as RouterLink } from '@inertiajs/react'
 import { useSize } from '@chakra-ui/react-use-size'
 import { useRef } from 'react'
-import { ChevronDown, LogOutIcon } from 'lucide-react'
+import { ChevronDown, LogOutIcon, Settings } from 'lucide-react'
 import { type User } from '../@types/User.ts'
 
 interface NavbarProps {
@@ -92,6 +92,18 @@ function Navbar({ title, user }: NavbarProps) {
         >
           <PopoverArrow boxShadow='-1px -1px 0px 0px #DBDBDB' />
           <PopoverBody>
+            {user.type === 'App\\Models\\Customer' && (
+              <Link
+                as={RouterLink}
+                href={`/clientes/${user.id}`}
+                _focusVisible={{ textDecoration: 'underline' }}
+              >
+                <Flex p='1'>
+                  <Settings height='24px' width='24px' />
+                  <Text ml='2'>Meus dados</Text>
+                </Flex>
+              </Link>
+            )}
             <Link
               as={RouterLink}
               href='/logout'

@@ -46,9 +46,10 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['can:edit-customers'])->group(function () {
         Route::get('/clientes', [CustomerController::class, 'index'])->name('customers');
         Route::get('/clientes/cadastro', [CustomerController::class, 'form'])->name('customer_form');
-        Route::get('/clientes/{id}', [CustomerController::class, 'edit_form'])->name('customer_edit_form');
-        Route::post('/clientes/{id}', [CustomerController::class, 'update'])->name('update_customer');
     });
+
+    Route::get('/clientes/{id}', [CustomerController::class, 'edit_form'])->name('customer_edit_form');
+    Route::post('/clientes/{id}', [CustomerController::class, 'update'])->name('update_customer');
 
     Route::middleware(['can:edit-workers'])->group(function () {
         Route::get('/funcionarios', [WorkerController::class, 'index'])->name('workers');

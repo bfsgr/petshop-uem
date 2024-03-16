@@ -39,6 +39,13 @@ class CustomerController extends Controller
 
     public function edit_form(Request $request, int $id): Response|RedirectResponse
     {
+        $user = $request->user();
+
+        if (\Gate::denies('edit-customers') && $user->id !== $id) {
+            return redirect()->route('customers')->with('status', 'error')->with('message',
+                'Você não tem permissão para editar clientes.');
+        }
+
         $customer = User::where('type', Customer::class)->with('subclass')->find($id);
 
         if (! $customer) {
@@ -104,6 +111,11 @@ class CustomerController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        if (\Gate::denies('edit-customers') && $request->user()->id !== $id) {
+            return redirect()->route('customers')->with('status', 'error')->with('message',
+                'Você não tem permissão para editar clientes.');
+        }
+
         $user = User::where('type', Customer::class)->with('subclass')->find($id);
 
         $validated = $request->validate([
@@ -136,6 +148,10 @@ class CustomerController extends Controller
             'state' => $cepInfo['state'],
             'address_info' => $validated['address_info'],
         ]);
+
+        if ($request->user()->id === $id) {
+            return redirect()->route('home')->with('status', 'success')->with('message', 'Perfil atualizado!');
+        }
 
         return redirect()->route('customers')->with('status', 'success')->with('message', 'Cliente atualizado!');
     }
