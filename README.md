@@ -16,6 +16,8 @@ O jeito mais fácil de executar o projeto é usando o [docker](https://docs.dock
 docker compose up -d
 ```
 
+O sistema estará disponível no endereço http://localhost:9000.
+
 Um usuário padrão será criado no sistema, com ele é possível realizar todas as tarefas de sistema.
 ```
 email: admin@petshop.uem.br
